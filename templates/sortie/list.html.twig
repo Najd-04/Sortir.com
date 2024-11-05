@@ -3,7 +3,7 @@
 {% block title %}Sortie{% endblock %}
 
 {% block body %}
-    <h1>Sortie</h1>
+    <h1 class="btn btn-primary">Sortie</h1>
 {% for sortie in sorties %}
     <p>Nom de la sortie : {{ sortie.nom }}</p>
     <p>Date de la sortie : {{ sortie.dateHeureDebut | date('d/m/y H:i') }}</p>
