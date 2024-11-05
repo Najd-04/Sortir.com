@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+    <h1 class="h1"> Gérer les villes</h1>
+
+    <h2 class="h2">Filtrer les villes</h2>
+
+    <div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ville in villes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ ville.codePostal }}</td>
+                    <td>{{ ville.nom }}</td>
+                    <td>
+                        <a {#  href="{{ path('edit_item', {'id': item.id}) }}" #} class="btn btn-warning">Modifier</a>
+                        <a {# href="{{ path('delete_item', {'id': item.id}) }}" #} class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="h2">Ajouter une ville</h2>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <a {#  href="{{ path('edit_item', {'id': item.id}) }}" #} class="btn btn-info">Ajouter</a>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+
+
+
+{% endblock %}
