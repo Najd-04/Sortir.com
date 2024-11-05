@@ -1,3 +1,20 @@
-body {
-    background-color: skyblue;
+
+@font-face {
+    font-family: 'dragonball';
+    src: url('../fonts/DragonBall.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'arabe';
+    src: url('../fonts/arabe.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+body, h1, h2, h3, h4, h5, h6, .navbar-brand ,a {
+    font-family: 'dragonball', sans-serif;
+}
+p {
+    font-family: 'arabe', sans-serif;
+    font-size: 2em;
 }

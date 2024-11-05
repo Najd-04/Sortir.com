@@ -16,6 +16,20 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                csrf_token_id: authenticate     # Identifiant du jeton CSRF (le même que dans le formulaire Twig)
+                default_target_path: app_profile
+            logout:
+                path: app_logout
+                target: app_redirect_after_logout
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

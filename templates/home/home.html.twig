@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortir.com - Accueil{% endblock %}
+
+{% block body %}
+    <div class="bg-light min-vh-100 d-flex flex-column">
+
+        <!-- Section Héroïque -->
+        <section class="bg-primary text-white w-100 py-5 text-center">
+            <div class="container">
+                <h1 class="display-4 fw-bold mb-4">Bienvenue sur Sortir.com</h1>
+                <p class="lead max-w-2xl mx-auto">La plateforme dédiée aux étudiants de l'ENI École pour faciliter les sorties, renforcer les amitiés, et créer des souvenirs inoubliables ensemble !</p>
+            </div>
+        </section>
+
+        <!-- Section de Présentation -->
+        <section class="py-5 text-center">
+            <div class="container">
+                <h2 class="h2 fw-bold mb-4 text-dark">A propos de Sortir.com</h2>
+                <p class="text-muted mb-4">Sortir.com est conçu pour les étudiants de l'ENI École afin de simplifier l'organisation et la découverte des sorties. Que ce soit pour une soirée conviviale, une aventure en plein air, ou un moment de détente, notre plateforme permet de planifier facilement des activités et de partager des moments uniques entre étudiants.</p>
+                <p class="text-muted mb-4">Notre objectif est de renforcer les liens entre les étudiants, d'encourager la collaboration et de promouvoir une vie étudiante active et épanouissante. Rejoignez-nous et commencez à découvrir de nouvelles activités et de nouvelles personnes dès aujourd'hui !</p>
+                <p class="text-muted">Sortir.com - <span class="fst-italic">Parce que la vie étudiante est plus belle quand on la partage.</span></p>
+            </div>
+        </section>
+
+        <!-- Section d'Appel à l'Action -->
+        <section class="bg-light py-5 text-center">
+            <div class="container">
+                <h3 class="h3 fw-semibold text-primary mb-4">Pret a decouvrir ce que Sortir.com vous reserve ?</h3>
+                <p class="text-muted mb-4">Explorez les sorties, trouvez des idées d'activités et profitez d'une vie étudiante dynamique avec Sortir.com.</p>
+                <a href="{{ path('sortie_list')}}" class="btn btn-primary btn-lg">Découvrez les possibilités</a>
+            </div>
+        </section>
+
+    </div>
+{% endblock %}

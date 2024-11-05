@@ -6,11 +6,13 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
   #[ORM\Id]
@@ -60,6 +62,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
    */
   #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'participant', orphanRemoval: true)]
   private Collection $inscriptions;
+
+  #[ORM\ManyToOne(inversedBy: 'participants')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?Site $site = null;
 
   public function __construct()
   {
@@ -259,6 +265,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
               $inscription->setParticipant(null);
           }
       }
+
+      return $this;
+  }
+
+  public function getSite(): ?Site
+  {
+      return $this->site;
+  }
+
+  public function setSite(?Site $site): static
+  {
+      $this->site = $site;
 
       return $this;
   }
