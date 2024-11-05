@@ -1,7 +1,32 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %}Sortie{% endblock %}
 
+ {% form_theme form 'bootstrap_5_layout.html.twig' %}
+
 {% block body %}
-{{ form(form) }}
+    {# templates/sortie/new.html.twig #}
+
+    {{ form_start(form) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.dateHeureDebut) }}
+    {{ form_row(form.dateLimiteInscription) }}
+    {{ form_row(form.nbInscriptionsMax) }}
+    {{ form_row(form.duree) }}
+    {{ form_row(form.infosSortie) }}
+{#    {{ form_row(form.lieu) }}#}
+
+    <h3>Lieu de la sortie</h3>
+
+    {{ form_row(form.lieu.ville) }}
+    {{ form_row(form.lieu.nom) }}
+    {{ form_row(form.lieu.rue) }}
+    {{ form_row(form.lieu.longitude) }}
+    {{ form_row(form.lieu.latitude) }}
+
+    <button type="submit" formnovalidate>{{ form_widget(form.saveLieu) }}</button>
+    <button type="submit">{{ form_widget(form.saveSortie) }}</button>
+    {{ form_end(form) }}
+
 {% endblock %}

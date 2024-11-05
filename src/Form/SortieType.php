@@ -5,15 +5,17 @@ namespace App\Form;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\Ville;
-use App\Repository\LieuRepository;
-use App\Repository\VilleRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
@@ -34,36 +36,29 @@ class SortieType extends AbstractType
             ])
             ->add('nbInscriptionsMax', NumberType::class, [
                 'label' => 'Nombre de places',
-            ] )
-            ->add('duree')
+            ])
+            ->add('duree', NumberType::class, [
+                'label' => 'Durée',
+                ])
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description et infos',
             ])
-            ->add('ville', EntityType::class, [
-                'class' => Ville::class,
-                'mapped' => false,
-                'label' => 'Ville',
-                'choice_label' => 'nom',
-                'placeholder' => '-- Choisissez une ville--',
-                'query_builder' =>  function (VilleRepository $villeRepository) {
-                    return  $villeRepository->createQueryBuilder('v')
-                        ->orderBy('v.nom', 'ASC');
-                }
-            ])
             ->add('lieu', EntityType::class, [
-                'class' => Lieu::class,
-                'mapped' => false,
                 'label' => 'Lieu',
+                'class' => Lieu::class,
                 'choice_label' => 'nom',
-                'placeholder' => '-- Choisissez un lieu--',
-                'choices' => []
+                'placeholder' => "--Choisir une lieu--",
             ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer',
+            ->add('lieu', LieuType::class, [
+                'label' => 'Lieu de la sortie',
             ])
-        ;
+            ->add('saveLieu', SubmitType::class, [
+                'label' => 'Enregistrer le lieu',
+            ])
+            ->add('saveSortie', SubmitType::class, [
+                'label' => 'Enregistrer la sortie',
+            ]);
     }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
