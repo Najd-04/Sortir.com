@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortie{% endblock %}
+
+{% block body %}
+    <h1>Sortie</h1>
+{% for sortie in sorties %}
+    <p>Nom de la sortie : {{ sortie.nom }}</p>
+    <p>Date de la sortie : {{ sortie.dateHeureDebut | date('d/m/y H:i') }}</p>
+    <p>Date de la sortie : {{ sortie.dateLimiteInscription | date('d/m/y') }}</p>
+    <p>Inscrits/places : {{ sortie.nbInscriptionsMax }}</p>
+    {% endfor %}
+{% endblock %}
