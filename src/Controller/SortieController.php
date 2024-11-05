@@ -42,6 +42,7 @@ class SortieController extends AbstractController
         ]);
     }
 
+
     #[Route('/update/{id}', name: '_update')]
     public function update(Request $request, EntityManagerInterface $entityManager, Sortie $sortie): Response
     {
