@@ -13,16 +13,16 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin', name: 'admin')]
 class AdminController extends AbstractController
 {
-    #[Route('/villes', name: '_ville')]
+    #[Route('/villes.Sql', name: '_ville')]
 
 
     public function afficherVilles( VilleRepository $repository): Response
     {
 
         /*
-    *  temps 1 : afficher villes
-       temps 2: ajouter villes
-       temps 3: rechercher villes
+    *  temps 1 : afficher villes.Sql
+       temps 2: ajouter villes.Sql
+       temps 3: rechercher villes.Sql
     */
 
 
@@ -30,8 +30,8 @@ class AdminController extends AbstractController
 
 
         //todo: MAJ template quand prêt
-        return $this->render('gestion_admin/site.html.twig', [
-            'villes' => $villes,
+        return $this->render('gestion_admin/ville.html.twig', [
+            'villes.Sql' => $villes,
 
         ]);
     }
