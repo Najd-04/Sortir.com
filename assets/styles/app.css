@@ -14,9 +14,9 @@
 body, h1, h2, h3, h4, h5, h6, .navbar-brand ,a {
     font-family: 'dragonball', sans-serif;
 }
-p {
+p, label, th {
     font-family: 'arabe', sans-serif;
-    font-size: 2em;
+    font-size: 2rem;
 }
 
 .table-scrollable {
