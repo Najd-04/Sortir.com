@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 
+use App\Entity\Ville;
+use App\Form\VilleType;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,8 +16,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class AdminController extends AbstractController
 {
     #[Route('/villes', name: '_ville')]
-        public function afficherVilles( VilleRepository $repository): Response
+        public function afficherVilles(EntityManagerInterface $em,  Request $request, VilleRepository $repository): Response
     {
+
+
 
         /*
     *  temps 1 : afficher villes.Sql
@@ -24,18 +28,36 @@ class AdminController extends AbstractController
     */
 
 
+        //pour afficher liste villes
         $villes = $repository->findAll();
 
 
-        //todo: MAJ template quand prêt
+        //pour ajouter nouvelle ville
+        $nouvelleVille = new Ville();
+
+        $inputForm =$this->createForm(VilleType::class, $nouvelleVille);
+        $inputForm->handleRequest($request);
+
+        if ($inputForm->isSubmitted() && $inputForm->isValid()) {
+            $em->persist($nouvelleVille);
+            $em->flush();
+
+            $this->addFlash('success', 'Une nouvelle ville a été ajoutée');
+            return $this->redirectToRoute('admin_ville');
+        }
+
+
+
         return $this->render('gestion_admin/ville.html.twig', [
             'villes' => $villes,
+            'inputForm' => $inputForm->createView(),
 
         ]);
     }
 
-
-
+    private function createfForm(string $class, Ville $nouvelleVille)
+    {
+    }
 
 
 }

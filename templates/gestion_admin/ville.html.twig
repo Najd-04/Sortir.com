@@ -36,7 +36,7 @@
             <tbody>
             {% for ville in villes %}
                 <tr>
-                    <td>{{ loop.index }}</td>
+                    <td>{{ ville.id }}</td>
                     <td>{{ ville.codePostal }}</td>
                     <td>{{ ville.nom }}</td>
                     <td>
@@ -56,14 +56,19 @@
             <tr>
                 <th>#</th>
                 <th>
+                    {{ form_label(inputForm.codePostal) }}
+                    {#
                     <label for="code-postal">
                     Code Postal
                     </label>
+                    #}
                 </th>
                 <th>
-                    <label for="ville">
+                    {{ form_label(inputForm.nom) }}
+                 {#   <label for="ville">
                         Code Postal
                     </label>
+                 #}
                 </th>
                 <th>Actions</th>
             </tr>
@@ -72,19 +77,28 @@
                 <tr>
                     <td>/</td>
                     <td>
+                        {{ form_widget(inputForm.codePostal) }}
+                        {#
                         <input id="code-postal" type="text" name="code-postal" class="form-control" placeholder="Code Postal" required>
+                        #}
                     </td>
                     <td>
+                        {{ form_widget(inputForm.nom) }}
+                        {#
                         <input id="ville" type="text" name="ville" class="form-control" placeholder="Ville" required>
+                        #}
                     </td>
                     <td>
-                        <input {#  href="{{ path('edit_item', {'id': item.id}) }}" #} type="submit" value="Ajouter" class="btn btn-info"></input>
-
+                        {{ form_widget(inputForm.submit) }}
+                        {#
+                        <input {#  href="{{ path('edit_item', {'id': item.id}) }}"  type="submit" value="Ajouter" class="btn btn-info"></input>
+                        #}
                     </td>
                 </tr>
 
             </tbody>
         </table>
+            {{ form_end(inputForm) }}
         </form>
 
 
