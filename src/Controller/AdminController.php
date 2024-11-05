@@ -13,10 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin', name: 'admin')]
 class AdminController extends AbstractController
 {
-    #[Route('/villes.Sql', name: '_ville')]
-
-
-    public function afficherVilles( VilleRepository $repository): Response
+    #[Route('/villes', name: '_ville')]
+        public function afficherVilles( VilleRepository $repository): Response
     {
 
         /*
@@ -31,7 +29,7 @@ class AdminController extends AbstractController
 
         //todo: MAJ template quand prêt
         return $this->render('gestion_admin/ville.html.twig', [
-            'villes.Sql' => $villes,
+            'villes' => $villes,
 
         ]);
     }

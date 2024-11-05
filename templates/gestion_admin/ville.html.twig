@@ -9,8 +9,7 @@
     <h2 class="h2">Filtrer les villes</h2>
 
     <div>
-
-        <table class="table table-striped">
+        <table class="table-scrollable table table-striped">
             <thead>
             <tr>
                 <th>#</th>
@@ -33,32 +32,45 @@
             {% endfor %}
             </tbody>
         </table>
-
+</div>
         <h2 class="h2">Ajouter une ville</h2>
 
+        <form action="{{ path('admin_ville') }}" method="POST">
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>#</th>
-                <th>Code Postal</th>
-                <th>Ville</th>
+                <th>
+                    <label for="code-postal">
+                    Code Postal
+                    </label>
+                </th>
+                <th>
+                    <label for="ville">
+                        Code Postal
+                    </label>
+                </th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>/</td>
-                    <td></td>
-                    <td></td>
                     <td>
-                        <a {#  href="{{ path('edit_item', {'id': item.id}) }}" #} class="btn btn-info">Ajouter</a>
+                        <input id="code-postal" type="text" name="code-postal" class="form-control" placeholder="Code Postal" required>
+                    </td>
+                    <td>
+                        <input id="ville" type="text" name="ville" class="form-control" placeholder="Ville" required>
+                    </td>
+                    <td>
+                        <input {#  href="{{ path('edit_item', {'id': item.id}) }}" #} type="submit" value="Ajouter" class="btn btn-info"></input>
 
                     </td>
                 </tr>
 
             </tbody>
         </table>
-
+        </form>
 
 
     </div>
