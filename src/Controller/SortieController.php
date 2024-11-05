@@ -51,7 +51,7 @@ class SortieController extends AbstractController
 
                 $this->addFlash('success', 'Le lieu a été enregistré avec succès.');
 
-                return $this->redirectToRoute('sortie_list'); // ou redirigez vers une autre page si nécessaire
+                return $this->redirectToRoute('sortie_create'); // ou redirigez vers une autre page si nécessaire
 
             } elseif ($form->get('saveSortie')->isClicked() && $form->isValid()) {
                 // Action pour enregistrer la sortie complète (avec le lieu associé)

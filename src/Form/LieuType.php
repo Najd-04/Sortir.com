@@ -22,9 +22,6 @@ class LieuType extends AbstractType
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
                 'choice_label' => 'nom',
-            ])
-            ->add('saveLieu', SubmitType::class, [
-                'label' => 'Enregistrer'
             ]);
     }
 
