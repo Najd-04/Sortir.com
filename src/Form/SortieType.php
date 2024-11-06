@@ -77,7 +77,11 @@ class SortieType extends AbstractType
             ->add('lieu', LieuType::class, [
                 'label' => 'Nouveau Lieu',
                 'required' => false,
-//                'attr' => ['style' => 'display:none'], // Caché par défaut
+                'attr' => ['style' => 'display:none'], // Caché par défaut
+            ])
+            ->add('addLieu', ButtonType::class, [
+                'label' => 'Ajouter un nouveau lieu',
+                'attr' => ['class' => 'btn btn-primary', 'onclick' => 'showNewLieuForm()'],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer la sortie',
