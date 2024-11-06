@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\Ville;
 use App\Form\VilleType;
 use App\Repository\VilleRepository;
+use App\Service\SentenceCaseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +17,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class AdminController extends AbstractController
 {
     #[Route('/villes', name: '_ville')]
-        public function afficherVilles(EntityManagerInterface $em,  Request $request, VilleRepository $repository): Response
+    public function afficherVilles(EntityManagerInterface $em,  Request $request, VilleRepository $repository, SentenceCaseService $sentenceCaseService ): Response
     {
-
 
 
         /*
@@ -33,12 +33,16 @@ class AdminController extends AbstractController
 
 
         //pour ajouter nouvelle ville
-        $nouvelleVille = new Ville();
+        $nouvelleVille = new Ville($sentenceCaseService);
 
-        $inputForm =$this->createForm(VilleType::class, $nouvelleVille);
+        $inputForm = $this->createForm(VilleType::class, $nouvelleVille);
         $inputForm->handleRequest($request);
 
+        // dump($inputForm->getErrors(true));
+
         if ($inputForm->isSubmitted() && $inputForm->isValid()) {
+
+
             $em->persist($nouvelleVille);
             $em->flush();
 
@@ -47,17 +51,30 @@ class AdminController extends AbstractController
         }
 
 
-
         return $this->render('gestion_admin/ville.html.twig', [
             'villes' => $villes,
-            'inputForm' => $inputForm->createView(),
-
+            'inputForm' => $inputForm,
         ]);
     }
+
+
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
+    public function delete(Ville $ville, EntityManagerInterface $em, Request $request, SentenceCaseService $sentenceCaseService): Response {
+
+       $em->remove($ville);
+       $em->flush();
+       $this->addFlash('success','La ville a été supprimée');
+
+
+        return $this->redirectToRoute('admin_ville');
+    }
+
+
 
     private function createfForm(string $class, Ville $nouvelleVille)
     {
     }
+
 
 
 }

@@ -21,8 +21,6 @@
             <button class="btn btn-info">Chercher</button>
         </div>
     </form>
-
-
     <div>
         <table class="table-scrollable table table-striped">
             <thead>
@@ -40,8 +38,13 @@
                     <td>{{ ville.codePostal }}</td>
                     <td>{{ ville.nom }}</td>
                     <td>
-                        <a {#  href="{{ path('edit_item', {'id': item.id}) }}" #} class="btn btn-warning">Modifier</a>
-                        <a {# href="{{ path('delete_item', {'id': item.id}) }}" #} class="btn btn-danger">Supprimer</a>
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">
+                            Modifier
+                        </button>
+                        <a class="btn btn-danger" href="{{ path('admin_delete', {'id' : ville.id}) }}"> Supprimer </a>
+                        {#
+                        <a {#  href="{{ path('edit_item', {'id': item.id}) }}" class="btn btn-warning">Modifier</a>
+                        #}
                     </td>
                 </tr>
             {% endfor %}
@@ -78,12 +81,14 @@
                     <td>/</td>
                     <td>
                         {{ form_widget(inputForm.codePostal) }}
+                        {{ form_errors(inputForm.codePostal) }}
                         {#
                         <input id="code-postal" type="text" name="code-postal" class="form-control" placeholder="Code Postal" required>
                         #}
                     </td>
                     <td>
                         {{ form_widget(inputForm.nom) }}
+                        {{ form_errors(inputForm.nom) }}
                         {#
                         <input id="ville" type="text" name="ville" class="form-control" placeholder="Ville" required>
                         #}

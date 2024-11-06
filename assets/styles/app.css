@@ -1,20 +1,20 @@
 
-@font-face {
+/* @font-face {
     font-family: 'star';
     src: url('../fonts/star.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
-/*@font-face {*/
+/*@font-face {
 /*    font-family: 'harry';*/
 /*    src: url('../fonts/arabe.otf') format('opentype');*/
 /*    font-weight: normal;*/
 /*    font-style: normal;*/
 /*}*/
-body, h1, h2, h3, h4, h5, h6, .navbar-brand ,a {
+ h1, h2, h3, h4, h5, h6, .navbar-brand ,a {
     font-family: 'star', sans-serif;
 }
-p, label, th {
+body, p, label, th {
     font-family: 'star', sans-serif;
     font-size: 2rem;
 }

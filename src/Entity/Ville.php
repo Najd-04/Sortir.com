@@ -3,11 +3,19 @@
 namespace App\Entity;
 
 use App\Repository\VilleRepository;
+use App\Service\SentenceCaseService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\UniqueConstraint(columns: ['nom', 'code_postal'])]
+#[UniqueEntity(fields: ['codePostal', 'nom'])]
+#[UniqueEntity(fields: ['codePostal'], message: 'Ce code postal est déjà utilisé.')]
+#[UniqueEntity(fields: ['nom'], message: 'Cette ville est déjà utilisée.')]
 class Ville
 {
     #[ORM\Id]
@@ -16,9 +24,14 @@ class Ville
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 30, minMessage: 'Le nom de la ville doit faire au moins {{ limit }} caractères.')]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 6)]
+    #[Assert\NotBlank]
+    #[Assert\Length(exactly:5, exactMessage:'Le code postal doit comporter 5 chiffres')]
+   // #[Assert\Length(min:5, max:5, minMessage: 'Le code postal doit comporter 5 chiffres', maxMessage: 'Le code postal doit comporter 5 chiffres.')]
     private ?string $codePostal = null;
 
     /**
@@ -27,7 +40,7 @@ class Ville
     #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'ville', orphanRemoval: true)]
     private Collection $lieux;
 
-    public function __construct()
+    public function __construct(private readonly SentenceCaseService $sentenceCaseService)
     {
         $this->lieux = new ArrayCollection();
     }
@@ -44,7 +57,7 @@ class Ville
 
     public function setNom(string $nom): static
     {
-        $this->nom = $nom;
+        $this->nom = $this->sentenceCaseService->appliquerSentenceCase($nom);
 
         return $this;
     }

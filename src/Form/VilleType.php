@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class VilleType extends AbstractType
 {
@@ -16,11 +17,13 @@ class VilleType extends AbstractType
         $builder
             ->add('codePostal', TextType::class, [
                 'label' => 'Code Postal',
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Code Postal']
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Code Postal'],
+                'required' => true,
             ])
             ->add('nom', TextType::class, [
                 'label' => 'Ville',
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Ville']
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Ville'],
+                'required' => true,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter',
