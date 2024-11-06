@@ -2,20 +2,19 @@
 
 namespace App\Form;
 
+use App\Entity\Etat;
 use App\Entity\Lieu;
+use App\Entity\Participant;
+use App\Entity\Site;
 use App\Entity\Sortie;
-use App\Entity\Ville;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
@@ -44,27 +43,47 @@ class SortieType extends AbstractType
             ->add('duree', NumberType::class, [
                 'label' => 'Durée',
                 'required' => false,
-                ])
+            ])
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description et infos',
                 'required' => false,
             ])
-            ->add('lieu', EntityType::class, [
-                'label' => 'Lieu',
+            ->add('lieux', EntityType::class, [
+                'label' => 'Lieu existant',
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
-                'placeholder' => "--Choisir une lieu--",
+                'required' => false,
+                'mapped' => false,
+                'placeholder' => 'Sélectionnez un lieu existant',
+            ])
+            ->add('site', EntityType::class, [
+                'label' => 'Site',
+                'class' => Site::class,
+                'choice_label' => 'nom',
+                'required' => false,
+            ])
+            ->add('etat', EntityType::class, [
+                'label' => 'Etat',
+                'class' => Etat::class,
+                'choice_label' => 'libelle',
+                'required' => false,
+            ])
+            ->add('organisateur', EntityType::class, [
+                'label' => 'Organisateur',
+                'class' => Participant::class,
+                'choice_label' => 'nom',
+                'required' => false,
             ])
             ->add('lieu', LieuType::class, [
-                'label' => 'Lieu de la sortie',
+                'label' => 'Nouveau Lieu',
+                'required' => false,
+//                'attr' => ['style' => 'display:none'], // Caché par défaut
             ])
-            ->add('saveLieu', SubmitType::class, [
-                'label' => 'Enregistrer le lieu',
-            ])
-            ->add('saveSortie', SubmitType::class, [
+            ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer la sortie',
             ]);
     }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

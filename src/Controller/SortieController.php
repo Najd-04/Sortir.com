@@ -8,6 +8,7 @@ use App\Entity\Participant;
 use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Form\LieuType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
@@ -32,42 +33,37 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/create', name: '_create')]
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: '_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $etat = $entityManager->getRepository(Etat::class)->find(1);
-        $site = $entityManager->getRepository(Site::class)->find(1);
-        $organisateur = $entityManager->getRepository(Participant::class)->find(1);
         $sortie = new Sortie();
-        $sortie->setLieu(new Lieu());
         $form = $this->createForm(SortieType::class, $sortie);
+
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->get('saveLieu')->isClicked()) {
-                // Action pour enregistrer uniquement le lieu
-                $lieu = $sortie->getLieu();
-                $entityManager->persist($lieu);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifie si un nouveau lieu a été ajouté
+            $nouveauLieu = $form->get('lieu')->getData();
+            if (!($nouveauLieu->getNom() == null)) {
+                // Enregistrer le nouveau lieu dans la base de données
+                $formLieu = $this->createForm(LieuType::class, $nouveauLieu);
+                $formLieu->handleRequest($request);
+                $entityManager->persist($nouveauLieu);
                 $entityManager->flush();
-
-                $this->addFlash('success', 'Le lieu a été enregistré avec succès.');
-
-                return $this->redirectToRoute('sortie_create'); // ou redirigez vers une autre page si nécessaire
-
-            } elseif ($form->get('saveSortie')->isClicked() && $form->isValid()) {
-                // Action pour enregistrer la sortie complète (avec le lieu associé)
-                $sortie->setEtat($etat);
-                $sortie->setSite($site);
-                $sortie->setOrganisateur($organisateur);
-                $entityManager->persist($sortie);
-                $entityManager->flush();
-                $this->addFlash('success', 'Une nouvelle serie a été créée avec succès !');
-                return $this->redirectToRoute('sortie_list');
+                // Assigner ce lieu à la sortie
+                $sortie->setLieu($nouveauLieu);
             } else {
-                return $this->redirectToRoute('sortie_list');
+                // Si aucun nouveau lieu n'est ajouté, utiliser le lieu existant sélectionné
+                $sortie->setLieu($form->get('lieux')->getData());
             }
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('sortie_list');
         }
-        return $this->render('sortie/edit.html.twig', [
-            'form' => $form,
+
+        return $this->render('sortie/new.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
@@ -82,7 +78,7 @@ Route('/update/{id}', name: '_update')]
         $this->addFlash('success', 'La sortie a été modifiée avec succès !');
         return $this->redirectToRoute('sortie_list');
     }
-    return $this->render('sortie/edit.html.twig', [
+    return $this->render('sortie/new.html.twig', [
         'form' => $form,
     ]);
 }

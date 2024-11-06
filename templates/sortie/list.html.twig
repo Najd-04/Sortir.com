@@ -9,5 +9,6 @@
     <p>Date de la sortie : {{ sortie.dateHeureDebut | date('d/m/y H:i') }}</p>
     <p>Date de la sortie : {{ sortie.dateLimiteInscription | date('d/m/y') }}</p>
     <p>Inscrits/places : {{ sortie.nbInscriptionsMax }}</p>
+    <p>Lieu : {{ sortie.lieu.nom }}</p>
     {% endfor %}
 {% endblock %}
