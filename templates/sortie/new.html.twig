@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Sortie{% endblock %}
+
+{% block body %}
+    <h1>Nouvelle Sortie</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.dateHeureDebut) }}
+    {{ form_row(form.dateLimiteInscription) }}
+    {{ form_row(form.nbInscriptionsMax) }}
+    {{ form_row(form.duree) }}
+    {{ form_row(form.infosSortie) }}
+
+    {# Liste déroulante pour les lieux existants #}
+    {{ form_row(form.site) }}
+    {{ form_row(form.etat) }}
+    {{ form_row(form.organisateur) }}
+    {{ form_row(form.lieux) }}
+
+    {# Bouton pour afficher le formulaire de nouveau lieu #}
+    {{ form_row(form.addLieu) }}
+
+    {# Formulaire de nouveau lieu, caché par défaut #}
+    <div id="nouveau-lieu-form">
+        {{ form_row(form.lieu) }}
+    </div>
+
+
+    {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+
+    <script>
+        function showNewLieuForm() {
+            document.getElementById('nouveau-lieu-form').style.display = 'block';
+        }
+    </script>
+{% endblock %}
