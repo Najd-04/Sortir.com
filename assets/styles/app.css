@@ -39,3 +39,21 @@ body, p, label, th {
 .table-scrollable thead {
     background-color: #f8f9fa;
 }
+
+.form-row {
+    display: flex;
+    align-items: center;  /* Aligner verticalement les éléments au centre */
+    gap: 15px;  /* Ajouter un espace entre les éléments */
+}
+
+.form-group {
+    flex: 1; /* Assurez-vous que les éléments prennent toute la largeur disponible */
+}
+
+.form-group:last-child {
+    flex: 0; /* Ne pas faire grandir le dernier élément (le bouton) */
+}
+/* Déplacer le bouton vers le bas */
+.form-group button {
+    margin-top: 40px;  /* Ajustez cette valeur selon votre besoin */
+}

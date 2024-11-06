@@ -15,27 +15,38 @@
     {{ form_row(form.duree) }}
     {{ form_row(form.infosSortie) }}
 
-    {# Liste déroulante pour les lieux existants #}
+
     {{ form_row(form.site) }}
     {{ form_row(form.etat) }}
     {{ form_row(form.organisateur) }}
-    {{ form_row(form.lieux) }}
-
     {# Bouton pour afficher le formulaire de nouveau lieu #}
-    {{ form_row(form.addLieu) }}
+
+    {# Liste déroulante pour les lieux existants #}
+    <div class="form-row">
+        <div class="form-group">
+            {{ form_row(form.lieux) }}
+        </div>
+        <div class="form-group">
+            {{ form_widget(form.addLieu) }}
+        </div>
+    </div>
+
 
     {# Formulaire de nouveau lieu, caché par défaut #}
-    <div id="nouveau-lieu-form">
+    <div id="nouveau-lieu-form" style="display: none;">
         {{ form_row(form.lieu) }}
     </div>
 
 
-    {{ form_row(form.submit) }}
+    {{ form_widget(form.submit) }}
     {{ form_end(form) }}
 
     <script>
+        // Fonction pour afficher le formulaire de nouveau lieu
         function showNewLieuForm() {
+            // Rendre visible la div contenant le sous-formulaire Lieu
             document.getElementById('nouveau-lieu-form').style.display = 'block';
         }
     </script>
 {% endblock %}
+
