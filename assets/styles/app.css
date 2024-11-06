@@ -39,3 +39,8 @@ p, label, th {
 .table-scrollable thead {
     background-color: #f8f9fa;
 }
+
+.btn-submit img {
+    width: 100px;  /* Ajuster la largeur de l'image */
+    height: auto;  /* Garder les proportions de l'image */
+}

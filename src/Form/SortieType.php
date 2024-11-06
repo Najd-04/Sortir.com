@@ -15,6 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
@@ -53,8 +55,8 @@ class SortieType extends AbstractType
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
                 'required' => false,
-                'mapped' => false,
                 'placeholder' => 'Sélectionnez un lieu existant',
+                'mapped' => false,
             ])
             ->add('site', EntityType::class, [
                 'label' => 'Site',
@@ -74,18 +76,30 @@ class SortieType extends AbstractType
                 'choice_label' => 'nom',
                 'required' => false,
             ])
-            ->add('lieu', LieuType::class, [
-                'label' => 'Nouveau Lieu',
-                'required' => false,
-                'attr' => ['style' => 'display:none'], // Caché par défaut
-            ])
             ->add('addLieu', ButtonType::class, [
-                'label' => 'Ajouter un nouveau lieu',
-                'attr' => ['class' => 'btn btn-primary', 'onclick' => 'showNewLieuForm()'],
+                'label' => '<i class="bi bi-plus-square"></i>',
+                'attr' => [
+                    'class' => 'btn btn-primary',
+                    'onclick' => 'showNewLieuForm()'],
+                'label_html' => true,  // Permet de rendre l'HTML dans le label
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer la sortie',
             ]);
+
+        // Ajouter l'événement PRE_SET_DATA pour ajouter dynamiquement le champ de lieu
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            // Vérifier une condition pour afficher le sous-formulaire lieu
+            if ($event->getData() && $event->getData()->getLieu() === null) {
+                // Ajouter dynamiquement le champ de type LieuType
+                $form->add('lieu', LieuType::class, [
+                    'label' => 'Nouveau Lieu',
+                    'required' => false,
+                ]);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
