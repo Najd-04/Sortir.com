@@ -80,7 +80,9 @@ class SortieType extends AbstractType
                 'label' => '<i class="bi bi-plus-square"></i>',
                 'attr' => [
                     'class' => 'btn btn-primary',
-                    'onclick' => 'showNewLieuForm()'],
+                    'onclick' => 'showNewLieuForm()',
+                    'style' => ''
+                ],
                 'label_html' => true,  // Permet de rendre l'HTML dans le label
             ])
             ->add('submit', SubmitType::class, [
