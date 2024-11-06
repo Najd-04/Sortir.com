@@ -114,7 +114,7 @@ class SortieType extends AbstractType
             $form = $event->getForm();
 
             // Vérifier une condition pour afficher le sous-formulaire lieu
-            if ($event->getData() && $event->getData()->getLieu() === null) {
+//            if ($event->getData() && $event->getData()->getLieu() === null) {
                 // Ajouter dynamiquement le champ de type LieuType
                 $form->add('lieu', LieuType::class, [
                     'label' => 'Nouveau Lieu',
@@ -123,7 +123,7 @@ class SortieType extends AbstractType
                     ],
                     'required' => false,
                 ]);
-            }
+//            }
         });
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

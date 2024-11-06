@@ -37,10 +37,12 @@
         </div>
     </div>
 
+{#    {% if form.lieu is defined %}#}
     {# Formulaire de nouveau lieu, caché par défaut #}
     <div id="nouveau-lieu-form" style="display: none;">
         {{ form_row(form.lieu) }}
     </div>
+{#    {% endif %}#}
 
 
     {{ form_widget(form.submit) }}
