@@ -16,21 +16,26 @@
     {{ form_row(form.infosSortie) }}
 
 
-    {{ form_row(form.site) }}
     {{ form_row(form.etat) }}
+    {{ form_row(form.site) }}
     {{ form_row(form.organisateur) }}
-    {# Bouton pour afficher le formulaire de nouveau lieu #}
+    <div class="form-group">
+        {{ form_label(form.ville) }}
+        {{ form_widget(form.ville) }}
+    </div>
+
 
     {# Liste déroulante pour les lieux existants #}
     <div class="form-row">
         <div class="form-group">
-            {{ form_row(form.lieux) }}
+            {{ form_label(form.lieux) }}
+            {{ form_widget(form.lieux) }}
         </div>
+        {# Bouton pour afficher le formulaire de nouveau lieu #}
         <div class="form-group">
             {{ form_widget(form.addLieu) }}
         </div>
     </div>
-
 
     {# Formulaire de nouveau lieu, caché par défaut #}
     <div id="nouveau-lieu-form" style="display: none;">
@@ -47,6 +52,34 @@
             // Rendre visible la div contenant le sous-formulaire Lieu
             document.getElementById('nouveau-lieu-form').style.display = 'block';
         }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#{{ form.ville.vars.id }}').change(function() {
+                let villeId = $(this).val();
+                let lieuSelect = $('#{{ form.lieux.vars.id }}');
+
+                lieuSelect.html('<option value="">Chargement...</option>');
+
+                if (villeId) {
+                    $.ajax({
+                        url: '{{ path("get_lieux") }}',
+                        type: 'GET',
+                        data: { ville_id: villeId },
+                        success: function(data) {
+                            lieuSelect.html('<option value="">Sélectionnez un lieu</option>');
+                            $.each(data, function(index, lieux) {
+                                lieuSelect.append('<option value="' + lieux.id + '">' + lieux.nom + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    lieuSelect.html('<option value="">Sélectionnez une ville d\'abord</option>');
+                }
+            });
+        });
     </script>
 {% endblock %}
 

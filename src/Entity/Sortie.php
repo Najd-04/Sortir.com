@@ -57,6 +57,8 @@ class Sortie
   #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'sortie', orphanRemoval: true)]
   private Collection $inscriptions;
 
+  private ?Ville $ville = null;
+
   public function __construct()
   {
       $this->inscriptions = new ArrayCollection();
@@ -218,5 +220,16 @@ class Sortie
       return $this;
   }
 
+// Getter et Setter pour la ville
+    public function getVille(): ?Ville
+    {
+        return $this->ville;
+    }
 
+    public function setVille(?Ville $ville): self
+    {
+        $this->ville = $ville;
+
+        return $this;
+    }
 }

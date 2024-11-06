@@ -38,12 +38,12 @@ class SortieController extends AbstractController
     {
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérifie si un nouveau lieu a été ajouté
             $nouveauLieu = $form->get('lieu')->getData();
-            if (!($nouveauLieu->getNom() == null)) {
+            $lieuExistant = $form->get('lieux')->getData();
+            if ($nouveauLieu && $nouveauLieu->getNom()) {
                 // Enregistrer le nouveau lieu dans la base de données
                 $formLieu = $this->createForm(LieuType::class, $nouveauLieu);
                 $formLieu->handleRequest($request);
@@ -53,7 +53,7 @@ class SortieController extends AbstractController
                 $sortie->setLieu($nouveauLieu);
             } else {
                 // Si aucun nouveau lieu n'est ajouté, utiliser le lieu existant sélectionné
-                $sortie->setLieu($form->get('lieux')->getData());
+                $sortie->setLieu($lieuExistant);
             }
 
             $entityManager->persist($sortie);
@@ -67,20 +67,40 @@ class SortieController extends AbstractController
         ]);
     }
 
-#[
-Route('/update/{id}', name: '_update')]
+    #[Route('/update/{id}', name: '_update', requirements: ['id' => '\d+']), ]
     public function update(Request $request, EntityManagerInterface $entityManager, Sortie $sortie): Response
-{
-    $form = $this->createForm(SortieType::class, $sortie);
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->flush();
-        $this->addFlash('success', 'La sortie a été modifiée avec succès !');
-        return $this->redirectToRoute('sortie_list');
+    {
+                dd();
+        $connectedUser = $this->getUser()->getUserIdentifier();
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($connectedUser === $sortie->getOrganisateur()) {
+                // Vérifie si un nouveau lieu a été ajouté
+                $nouveauLieu = $form->get('lieu')->getData();
+                $lieuExistant = $form->get('lieux')->getData();
+                if ($nouveauLieu && $nouveauLieu->getNom()) {
+                    // Enregistrer le nouveau lieu dans la base de données
+                    $formLieu = $this->createForm(LieuType::class, $nouveauLieu);
+                    $formLieu->handleRequest($request);
+                    $entityManager->persist($nouveauLieu);
+                    $entityManager->flush();
+                    // Assigner ce lieu à la sortie
+                    $sortie->setLieu($nouveauLieu);
+                } else {
+                    // Si aucun nouveau lieu n'est ajouté, utiliser le lieu existant sélectionné
+                    $sortie->setLieu($lieuExistant);
+                }
+            }
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('sortie_list');
+        }
+
+        return $this->render('sortie/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
-    return $this->render('sortie/new.html.twig', [
-        'form' => $form,
-    ]);
-}
 }
 
