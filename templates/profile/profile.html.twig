@@ -1,23 +1,25 @@
-{# templates/profile/profile.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil de {{ user.pseudo }}{% endblock %}
+{% block title %}Profil de {{ app.user.pseudo }}{% endblock %}
 
 {% block body %}
   <div class="container mt-5">
-    <h1 class="display-4">Profil de {{ user.pseudo }}</h1>
+    <h1 class="text-center">{{ app.user.pseudo }}</h1>
 
-    <div class="card mt-4">
-      <div class="card-body">
-        <h5 class="card-title">Informations personnelles</h5>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><strong>Prénom :</strong> {{ user.prenom }}</li>
-          <li class="list-group-item"><strong>Nom :</strong> {{ user.nom }}</li>
-          <li class="list-group-item"><strong>Téléphone :</strong> {{ user.telephone }}</li>
-          <li class="list-group-item"><strong>Email :</strong> {{ user.email }}</li>
-          <li class="list-group-item"><strong>Ville d'attachement :</strong> {{ user.site.nom }}</li>
-        </ul>
-      </div>
+    <div class="text-center">
+      {% if app.user.photoProfil %}
+        <img src="{{ asset(app.user.photoProfil) }}" alt="Photo de profil de {{ app.user.pseudo }}" class="img-thumbnail" style="width: 150px; height: 150px;">
+      {% else %}
+        <img src="{{ asset('uploads/profiles/default.png') }}" alt="Photo de profil par défaut" class="img-thumbnail" style="width: 150px; height: 150px;">
+      {% endif %}
     </div>
+
+    <ul class="list-group mt-3">
+      <li class="list-group-item"><strong>Nom :</strong> {{ app.user.nom }}</li>
+      <li class="list-group-item"><strong>Prénom :</strong> {{ app.user.prenom }}</li>
+      <li class="list-group-item"><strong>Email :</strong> {{ app.user.email }}</li>
+      <li class="list-group-item"><strong>Téléphone :</strong> {{ app.user.telephone }}</li>
+      <li class="list-group-item"><strong>Ville d'attachement :</strong> {{ app.user.site.nom }}</li>
+    </ul>
   </div>
 {% endblock %}

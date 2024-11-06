@@ -7,7 +7,6 @@
     <div class="container mt-5">
         <h1 class="text-center">Inscription</h1>
 
-
         {# Début du formulaire d'inscription #}
         {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
@@ -58,17 +57,17 @@
             {{ form_widget(registrationForm.site, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(registrationForm.site) }}
         </div>
-        <div class="mb-3">
-            {{ form_label(registrationForm.agreeTerms) }}
-            {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
-            {{ form_errors(registrationForm.agreeTerms) }}
-            <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
 
-            </label>
+        {# Champ de photo de profil #}
+        <div class="mb-3">
+            {{ form_label(registrationForm.photoProfil) }}
+            {{ form_widget(registrationForm.photoProfil, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(registrationForm.photoProfil) }}
+            <small class="form-text text-muted">Formats acceptés : JPG, PNG. Taille max : 2MB.</small>
         </div>
 
-
-        <div class="text-center">
+        {# Bouton d'enregistrement #}
+        <div class="text-center mt-4">
             <button type="submit" class="btn btn-primary">Enregistrer</button>
         </div>
 
