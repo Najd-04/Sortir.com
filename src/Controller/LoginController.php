@@ -18,7 +18,6 @@ class LoginController extends AbstractController
     // Dernier nom d'utilisateur saisi par l'utilisateur
     $lastUsername = $authenticationUtils->getLastUsername();
     if ($this->getUser()) {
-      $this->addFlash('success', 'Connexion réussie !');
       return $this->redirectToRoute('app_home'); // Redirige vers la page d'accueil
     }
 
@@ -31,7 +30,7 @@ class LoginController extends AbstractController
   #[Route(path: '/logout', name: 'app_logout')]
   public function logout(): void
   {
-    $this->addFlash('success', 'Déconnexion réussie !');
+
     throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
   }
 
