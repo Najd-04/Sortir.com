@@ -74,7 +74,7 @@ class SortieController extends AbstractController
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-//            if ($connectedUser === $sortie->getOrganisateur()) {
+            if ($connectedUser === $sortie->getOrganisateur()) {
                 // Vérifie si un nouveau lieu a été ajouté
                 $nouveauLieu = $form->get('lieu')->getData();
                 $lieuExistant = $form->get('lieux')->getData();
@@ -90,7 +90,7 @@ class SortieController extends AbstractController
                     // Si aucun nouveau lieu n'est ajouté, utiliser le lieu existant sélectionné
                     $sortie->setLieu($lieuExistant);
                 }
-//            }
+            }
             $entityManager->persist($sortie);
             $entityManager->flush();
 
