@@ -6,14 +6,24 @@
   <form method="post">
 
     <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
+
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {% if error.messageKey == 'Invalid credentials.' %}
+          Le mot de passe ou l'email est incorrect.
+        {% else %}
+          {{ error.messageKey|trans(error.messageData, 'security') }}
+        {% endif %}
+      </div>
+    {% endif %}
+
     <label for="username">Email</label>
     <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control"
            autocomplete="email" required autofocus>
     <label for="password">Password</label>
     <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     <div class="checkbox mb-3">
       <input type="checkbox" name="_remember_me" id="_remember_me">
       <label for="_remember_me">Se souvenir de moi</label>

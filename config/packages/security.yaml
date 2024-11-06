@@ -21,7 +21,7 @@ security:
                 check_path: app_login
                 enable_csrf: true
                 csrf_token_id: authenticate     # Identifiant du jeton CSRF (le même que dans le formulaire Twig)
-                default_target_path: app_profile
+                default_target_path: app_login_success
             logout:
                 path: app_logout
                 target: app_redirect_after_logout

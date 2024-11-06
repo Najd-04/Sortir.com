@@ -1,13 +1,24 @@
 {# templates/registration/register.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}
+    {% if app.user %}
+        Modifier le profil
+    {% else %}
+        Inscription
+    {% endif %}
+{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
-        <h1 class="text-center">Inscription</h1>
+        <h1 class="text-center">
+            {% if app.user %}
+                Modifier le profil
+            {% else %}
+                Inscription
+            {% endif %}
+        </h1>
 
-        {# Début du formulaire d'inscription #}
         {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
         <div class="mb-3">
@@ -40,17 +51,20 @@
             {{ form_errors(registrationForm.email) }}
         </div>
 
-        <div class="mb-3">
-            {{ form_label(registrationForm.plainPassword.first) }}
-            {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(registrationForm.plainPassword.first) }}
-        </div>
+        {# Affiche les champs de mot de passe seulement pour l'inscription #}
+        {% if not app.user %}
+            <div class="mb-3">
+                {{ form_label(registrationForm.plainPassword.first) }}
+                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.plainPassword.first) }}
+            </div>
 
-        <div class="mb-3">
-            {{ form_label(registrationForm.plainPassword.second) }}
-            {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(registrationForm.plainPassword.second) }}
-        </div>
+            <div class="mb-3">
+                {{ form_label(registrationForm.plainPassword.second) }}
+                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.plainPassword.second) }}
+            </div>
+        {% endif %}
 
         <div class="mb-3">
             {{ form_label(registrationForm.site) }}
@@ -58,20 +72,37 @@
             {{ form_errors(registrationForm.site) }}
         </div>
 
-        {# Champ de photo de profil #}
         <div class="mb-3">
             {{ form_label(registrationForm.photoProfil) }}
             {{ form_widget(registrationForm.photoProfil, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(registrationForm.photoProfil) }}
             <small class="form-text text-muted">Formats acceptés : JPG, PNG. Taille max : 2MB.</small>
         </div>
+        {# Affiche les champs de mot de passe seulement pour l'inscription #}
+        {% if app.user %}
+            <div class="mb-3">
+                {{ form_label(registrationForm.plainPassword.first) }}
+                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.plainPassword.first) }}
+            </div>
 
-        {# Bouton d'enregistrement #}
+            <div class="mb-3">
+                {{ form_label(registrationForm.plainPassword.second) }}
+                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(registrationForm.plainPassword.second) }}
+            </div>
+        {% endif %}
+
         <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <button type="submit" class="btn btn-primary">
+                {% if app.user %}
+                    Mettre à jour
+                {% else %}
+                    Enregistrer
+                {% endif %}
+            </button>
         </div>
 
         {{ form_end(registrationForm) }}
-        {# Fin du formulaire d'inscription #}
     </div>
 {% endblock %}
