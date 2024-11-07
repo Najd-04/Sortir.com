@@ -1,7 +1,74 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sortie {{ sortie.nom }}{% endblock %}
+{% block title %}Détails de la sortie{% endblock %}
 
 {% block body %}
-    <h1> Sortie {{ sortie.nom }}</h1>
+    <h1>Détails de la sortie</h1>
+
+    <h2>{{ sortie.nom }}</h2>
+    <p><strong>Date de la sortie :</strong> {{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</p>
+    <p><strong>Description :</strong> {{ sortie.infosSortie }}</p>
+
+    {# Affichage des informations du lieu #}
+    <h3>Lieu de la sortie</h3>
+    <p><strong>Nom :</strong> {{ sortie.lieu.nom }}</p> {# Affiche le nom du lieu #}
+    <p><strong>Rue :</strong> {{ sortie.lieu.rue }}</p>
+    <p><strong>Latitude :</strong> {{ sortie.lieu.latitude }}</p> {# Affiche la latitude (si disponible) #}
+    <p><strong>Longitude :</strong> {{ sortie.lieu.longitude }}</p> {# Affiche la longitude (si disponible) #}
+
+    {# Affichage de la ville de l'organisateur #}
+    <h3>Organisateur</h3>
+    <p><strong>Nom de l'organisateur :</strong> {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</p>
+    <p><strong>Ville :</strong> {{ sortie.lieu.ville.nom }}</p> {# Affiche la rue (si disponible) #}
+
+    <p><strong>Clôture des inscriptions :</strong> {{ sortie.dateLimiteInscription | date('d/m/Y') }}</p>
+    <p><strong>Places disponibles :</strong> {{ sortie.nbInscriptionsMax - sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }}</p>
+    <p><strong>Etat :</strong> {{ sortie.etat.libelle }}</p>
+
+    <h3>Participants inscrits</h3>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Pseudo</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for inscription in sortie.inscriptions %}
+            <tr>
+                <td>{{ inscription.participant.pseudo }}</td>
+                <td>{{ inscription.participant.nom }}</td>
+                <td>{{ inscription.participant.prenom }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucun participant inscrit pour cette sortie.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if app.user %}
+        {% if sortie.etat.libelle == 'Ouverte' %}
+            {% set isInscribed = false %}
+            {% for inscription in sortie.inscriptions %}
+                {% if inscription.participant.id == app.user.id %}
+                    {% set isInscribed = true %}
+                {% endif %}
+            {% endfor %}
+
+            {% if isInscribed %}
+                <a class="btn btn-danger" href="{{ path('app_sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ path('app_sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <p>Vous devez être connecté pour vous inscrire ou vous désister.</p>
+    {% endif %}
+
+    <br>
+    <a class="btn btn-info" href="{{ path('sortie_list') }}">Retour à la liste des sorties</a>
 {% endblock %}
