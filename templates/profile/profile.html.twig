@@ -2,37 +2,43 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil de {{ app.user.pseudo }}{% endblock %}
+{% block title %}Profil de {{ participant.pseudo }}{% endblock %}
 
 {% block body %}
-  <div class="container mt-5">
-    <h1 class="text-center">{{ app.user.pseudo }}</h1>
+    <div class="container mt-5">
+        <h1 class="text-center">{{ participant.pseudo }}</h1>
 
-    <div class="text-center">
-      {% if app.user.photoProfil %}
-        <img src="{{ asset(app.user.photoProfil) }}" alt="Photo de profil de {{ app.user.pseudo }}" class="img-thumbnail" style="width: 150px; height: 150px;">
-      {% else %}
-        <img src="{{ asset('uploads/profiles/default.png') }}" alt="Photo de profil par défaut" class="img-thumbnail" style="width: 150px; height: 150px;">
-      {% endif %}
+        <div class="text-center">
+            {% if participant.photoProfil %}
+                <img src="{{ asset(participant.photoProfil) }}" alt="Photo de profil de {{ participant.pseudo }}"
+                     class="img-thumbnail" style="width: 150px; height: 150px;">
+            {% else %}
+                <img src="{{ asset('uploads/profiles/default.png') }}" alt="Photo de profil par défaut"
+                     class="img-thumbnail" style="width: 150px; height: 150px;">
+            {% endif %}
+        </div>
+
+        <ul class="list-group mt-3">
+            <li class="list-group-item"><strong>Nom :</strong> {{ participant.nom }}</li>
+            <li class="list-group-item"><strong>Prénom :</strong> {{ participant.prenom }}</li>
+            <li class="list-group-item"><strong>Email :</strong> {{ participant.email }}</li>
+            <li class="list-group-item"><strong>Téléphone :</strong> {{ participant.telephone }}</li>
+            <li class="list-group-item"><strong>Ville d'attachement :</strong> {{ participant.site.nom }}</li>
+        </ul>
+
+        {% if app.user.id == participant.id %}
+            <div class="text-center mt-4">
+                <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Modifier mon profil</a>
+                <form action="{{ path('app_profile_delete', {id: app.user.id}) }}" method="post"
+                      style="display:inline-block">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ app.user.id) }}">
+                    <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre profil ?')">Supprimer mon
+                        profil
+                    </button>
+                </form>
+            </div>
+        {% endif %}
     </div>
-
-    <ul class="list-group mt-3">
-      <li class="list-group-item"><strong>Nom :</strong> {{ app.user.nom }}</li>
-      <li class="list-group-item"><strong>Prénom :</strong> {{ app.user.prenom }}</li>
-      <li class="list-group-item"><strong>Email :</strong> {{ app.user.email }}</li>
-      <li class="list-group-item"><strong>Téléphone :</strong> {{ app.user.telephone }}</li>
-      <li class="list-group-item"><strong>Ville d'attachement :</strong> {{ app.user.site.nom }}</li>
-    </ul>
-
-    <div class="text-center mt-4">
-      <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Modifier mon profil</a>
-
-      <form action="{{ path('app_profile_delete', {id: app.user.id}) }}" method="post" style="display:inline-block">
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ app.user.id) }}">
-        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre profil ?')">Supprimer mon profil</button>
-      </form>
-
-    </div>
-  </div>
 {% endblock %}

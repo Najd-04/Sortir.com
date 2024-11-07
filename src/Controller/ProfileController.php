@@ -17,18 +17,18 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ProfileController extends AbstractController
 {
-  #[Route('/profile', name: 'app_profile')]
+  #[Route('/profile/detail/{id}', name: 'app_profile')]
   #[IsGranted('IS_AUTHENTICATED')]
-  public function profile(): Response
+  public function profile(Participant $participant): Response
   {
-    $user = $this->getUser();
-
-    if (!$user) {
-      return $this->redirectToRoute('app_login');
-    }
+//    $user = $this->getUser();
+//
+//    if (!$user) {
+//      return $this->redirectToRoute('app_login');
+//    }
 
     return $this->render('profile/profile.html.twig', [
-      'user' => $user,
+      'participant' => $participant,
     ]);
   }
 

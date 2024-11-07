@@ -44,7 +44,7 @@ class LoginController extends AbstractController
   public function loginSuccess(): Response
   {
     $this->addFlash('success', 'Connexion réussie !');
-    return $this->redirectToRoute('app_profile');
+    return $this->redirectToRoute('app_profile', ['id' => $this->getUser()->getId()]);
   }
   #[Route('/redirect_after_logout', name: 'app_redirect_after_logout')]
   public function redirectAfterLogout(): Response
