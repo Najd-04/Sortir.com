@@ -53,12 +53,14 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ path('sortie_list') }}">Sorties</a>
             </li>
+          {% if is_granted('ROLE_ADMIN') %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ path('sortie_list') }}">villes</a>
+              <a class="nav-link" href="{{ path('admin_ville') }}">villes</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ path('sortie_list') }}">Sites</a>
             </li>
+            {% endif %}
           {% else %}
             <li class="nav-item">
               <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
