@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Helper\SentenceCaseService;
 use App\Repository\VilleRepository;
-use App\Service\SentenceCaseService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
