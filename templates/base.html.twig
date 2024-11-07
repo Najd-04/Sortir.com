@@ -46,7 +46,7 @@
                             <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
                         </li>
                         <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_profile') }}">Profile</a>
+                        <a class="nav-link" href="{{ path('app_profile', {'id': app.user.id}) }}">Profile</a>
                     </li>
                     {% else %}
                         <li class="nav-item">
