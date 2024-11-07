@@ -18,17 +18,16 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-    public function findSortieAvecParametre(?string $nom, ?\DateTime $dateDebut, ?\DateTime $dateFin, ?Etat $etatPasse, ?Participant $organisateur): array
+    public function findSortieAvecParametre(?string $nom, ?string $dateDebut, ?string $dateFin, ?Etat $etatPasse, ?Participant $organisateur): array
     {
         $query = $this->createQueryBuilder('s')
             ->orderBy('s.dateHeureDebut', 'ASC');
-
         if (!empty($nom)) {
             $query->andWhere('s.nom like :nom')
                 ->setParameter('nom', '%' . $nom . '%');
         }
         if (!empty($dateDebut) && !empty($dateFin)) {
-            $query->andWhere('s.dateHeureDebut BEETWEEN :dateDebut AND :dateFin')
+            $query->andWhere('s.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
                 ->setParameter('dateDebut', $dateDebut)
                 ->setParameter('dateFin', $dateFin);
         } else if (!empty($dateDebut)) {

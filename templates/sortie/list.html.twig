@@ -16,17 +16,24 @@
         </div>
         <div class="col">
             <label for="date_debut">
-                <input type="date" name="date_debut" value="{{ dateDebut }}" placeholder="Date de début">
+                <input type="date" name="date_debut" value="{{ date_debut }}">
             </label>
         </div>
         <div class="col">
             <label for="date_fin">
-                <input type="date" name="date_fin" value="{{ dateFin }}" placeholder="Date de fin">
+                <input type="date" name="date_fin" value="{{ date_fin }}">
             </label>
         </div>
         <div class="col">
             <label for="end_date">
-                <input type="date" name="end_date" value="{{ etatPasse }}" placeholder="Etat passée">
+                <input type="checkbox" name="sortie_passee" {% if sortie_passee %} checked {% endif %}>
+                Sortie passée
+            </label>
+        </div>
+        <div class="col">
+            <label for="isOrganisateur">
+                <input type="checkbox" name="organisateurChecked" {% if organisateur_checked %} checked {% endif %}>
+                Sortie dont je suis l'organisateur/trice
             </label>
         </div>
         <button class="btn btn-info">Rechercher</button>

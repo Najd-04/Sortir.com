@@ -30,20 +30,31 @@ class SortieController extends AbstractController
     #[Route('/list', name: '_list')]
     public function index(SortieRepository $repository, EntityManagerInterface $entityManager, Request $request): Response
     {
-        $nom = $request->query->get('nom');
-        $dateDebut = $request->query->get('date_debut');
-        $dateFin = $request->query->get('date_fin');
-        $organisateur = $this->getUser();
-        $etatPasse = $entityManager->getRepository(Etat::class)->find(['id' => 5])->getLibelle();
+        $nom = $request->query->get('nom', '');
+        $dateDebut = $request->query->get('date_debut', '');
+        $dateFin = $request->query->get('date_fin', '');
+        $sortiePassee = $request->query->get('sortie_passee', false);
+        $organisateurChecked = $request->query->get('organisateurChecked', false);
 
-        $sorties = $repository->findSortieAvecParametre(null, null, null, null, null);
+        $etat = null;
+        if ($sortiePassee) {
+            $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'passée']);
+        }
+
+        $organisateur = null;
+        if ($organisateurChecked) {
+            $organisateur = $this->getUser();
+        }
+
+        $sorties = $repository->findSortieAvecParametre($nom, $dateDebut, $dateFin, $etat, $organisateur);
+
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
             'nom' => $nom,
-            'dateDebut' => $dateDebut,
-            'dateFin' => $dateFin,
-            'etatPasse' => $etatPasse,
-            'organisateur' => $organisateur,
+            'date_debut' => $dateDebut,
+            'date_fin' => $dateFin,
+            'sortie_passee' => $sortiePassee,
+            'organisateur_checked' => $organisateurChecked,
         ]);
     }
 
