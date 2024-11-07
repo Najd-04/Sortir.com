@@ -58,7 +58,7 @@ class AdminController extends AbstractController
     }
 
 
-    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
+    #[Route('villes/delete/{id}', name: '_ville-delete', requirements: ['id' => '\d+'])]
     public function delete(Ville $ville, EntityManagerInterface $em, Request $request, SentenceCaseService $sentenceCaseService): Response {
 
        $em->remove($ville);
@@ -69,6 +69,26 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_ville');
     }
 
+    #[Route('villes/update/{id}', name: '_ville-update', requirements: ['id' => '\d+'])]
+    public function update(Ville $ville, EntityManagerInterface $em, Request $request, SentenceCaseService $sentenceCaseService): Response {
+
+        $updateForm = $this->createForm(VilleType::class, $ville);
+        $updateForm->handleRequest($request);
+
+        if ($updateForm->isSubmitted() && $updateForm->isValid()) {
+
+            $em->flush();
+
+            $this->addFlash('success', 'La ville a été modifiée avec succès.');
+            return $this->redirectToRoute('admin_ville');
+        }
+
+        //template à changer ici
+        return $this->render('serie/edit.html.twig', [
+            'updateForm' => $updateForm,
+        ]);
+
+    }
 
 
     private function createfForm(string $class, Ville $nouvelleVille)

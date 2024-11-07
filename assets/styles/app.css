@@ -57,3 +57,7 @@ body, p, label, th {
 .form-group button {
     margin-top: 40px;  /* Ajustez cette valeur selon votre besoin */
 }
+
+.hidden {
+    display: none;
+}

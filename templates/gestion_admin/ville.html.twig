@@ -4,6 +4,11 @@
 
 {% block body %}
 
+{#    {{ component('Alert', {message: 'Hello Twig Components!'}) }}
+#}
+    {% include 'components/ModalEditObject.html.twig' %}
+
+
     <h1 class="h1"> Gérer les villes</h1>
 
     <h2 class="h2">Filtrer les villes</h2>
@@ -38,10 +43,17 @@
                     <td>{{ ville.codePostal }}</td>
                     <td>{{ ville.nom }}</td>
                     <td>
+                        {#
                         <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">
                             Modifier
                         </button>
-                        <a class="btn btn-danger" href="{{ path('admin_delete', {'id' : ville.id}) }}"> Supprimer </a>
+                        #}
+                        <a class="btn btn-danger" href="{{ path('admin_ville-delete', {'id' : ville.id}) }}"> Supprimer </a>
+                        <!-- Button to trigger the modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalEditObject"
+                                data-ville-json="{{ ville|json_encode }}">
+                            Modifier
+                        </button>
                         {#
                         <a {#  href="{{ path('edit_item', {'id': item.id}) }}" class="btn btn-warning">Modifier</a>
                         #}
@@ -107,7 +119,27 @@
         </form>
 
 
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#modalEditObject').on('show.bs.modal', function (event) {
+                let button = $(event.relatedTarget); // Button that triggered the modal
+                let villeJson = button.data('ville-json');
+                let ville = JSON.parse(villeJson);
+
+                // Populate the modal with the corresponding data
+                let modal = $(this);
+                modal.find('#nom').val(ville.nom);
+                modal.find('#code_postal').val(ville.codePostal);
+                modal.find('#ville_id').val(ville.id)
+
+                modal.find('form').attr('action', 'admin/villes/update/' + ville.id);
+
+              //  modal.find('#ville-id').val(villeId)
+                               // Optional: You can store the ville ID in the form or modal if needed
+               // modal.find('form').attr('action', '/ville/update/' + villeId);  // Update action URL
+            });
+        });
+    </script>
 
 
 
