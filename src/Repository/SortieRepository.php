@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Etat;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,6 +16,37 @@ class SortieRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Sortie::class);
+    }
+
+    public function findSortieAvecParametre(?string $nom, ?\DateTime $dateDebut, ?\DateTime $dateFin, ?Etat $etatPasse, ?Participant $organisateur): array
+    {
+        $query = $this->createQueryBuilder('s')
+            ->orderBy('s.dateHeureDebut', 'ASC');
+
+        if (!empty($nom)) {
+            $query->andWhere('s.nom like :nom')
+                ->setParameter('nom', '%' . $nom . '%');
+        }
+        if (!empty($dateDebut) && !empty($dateFin)) {
+            $query->andWhere('s.dateHeureDebut BEETWEEN :dateDebut AND :dateFin')
+                ->setParameter('dateDebut', $dateDebut)
+                ->setParameter('dateFin', $dateFin);
+        } else if (!empty($dateDebut)) {
+            $query->andWhere('s.dateHeureDebut >= :dateDebut')
+                ->setParameter('dateDebut', $dateDebut);
+        } else if (!empty($dateFin)) {
+            $query->andWhere('s.dateHeureDebut <= :dateFin')
+                ->setParameter('dateFin', $dateFin);
+        }
+        if (!empty($etatPasse)) {
+            $query->andWhere('s.etat = :etatPasse')
+                ->setParameter('etatPasse', $etatPasse);
+        }
+        if (!empty($organisateur)) {
+            $query->andWhere('s.organisateur = :organisateur')
+                ->setParameter('organisateur', $organisateur);
+        }
+        return $query->getQuery()->getResult();
     }
 
     //    /**

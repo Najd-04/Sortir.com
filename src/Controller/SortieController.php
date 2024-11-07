@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Inscription;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Site;
@@ -27,12 +28,22 @@ use Symfony\Component\Routing\Attribute\Route;
 class SortieController extends AbstractController
 {
     #[Route('/list', name: '_list')]
-    public function index(SortieRepository $repository): Response
+    public function index(SortieRepository $repository, EntityManagerInterface $entityManager, Request $request): Response
     {
-        $sorties = $repository->findAll();
+        $nom = $request->query->get('nom');
+        $dateDebut = $request->query->get('date_debut');
+        $dateFin = $request->query->get('date_fin');
+        $organisateur = $this->getUser();
+        $etatPasse = $entityManager->getRepository(Etat::class)->find(['id' => 5])->getLibelle();
+
+        $sorties = $repository->findSortieAvecParametre(null, null, null, null, null);
         return $this->render('sortie/list.html.twig', [
-            'controller_name' => 'SortieController',
             'sorties' => $sorties,
+            'nom' => $nom,
+            'dateDebut' => $dateDebut,
+            'dateFin' => $dateFin,
+            'etatPasse' => $etatPasse,
+            'organisateur' => $organisateur,
         ]);
     }
 
