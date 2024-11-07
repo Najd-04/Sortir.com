@@ -14,11 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 class ImbricateForm
 {
 
-    public function __construct(private EntityManagerInterface $entityManager, private FormFactoryInterface $formFactory, private LieuRepository $lieuRepository, private SortieController $sortieController)
+    public function __construct(private EntityManagerInterface $entityManager, private FormFactoryInterface $formFactory)
     {
     }
 
-    public function addLieuToSortieForm(FormInterface $form, Sortie $sortie, Request $request,)
+    public function addLieuToSortieForm(FormInterface $form, Sortie $sortie, Request $request,) : void
     {
         $nouveauLieu = $form->get('lieu')->getData();
 //        dd($nouveauLieu);
