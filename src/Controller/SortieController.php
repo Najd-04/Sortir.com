@@ -60,10 +60,12 @@ class SortieController extends AbstractController
 
     #[Route('/detail/{id}', name: '_detail')]
     public function detail(Sortie $sortie): Response {
+      $googleMapsApiKey = $_ENV['GOOGLE_MAPS_API_KEY'];
 
-        return $this->render('sortie/detail.html.twig', [
-            'sortie' => $sortie
-        ]);
+      return $this->render('sortie/detail.html.twig', [
+        'sortie' => $sortie,
+        'google_maps_api_key' => $googleMapsApiKey,
+      ]);
     }
 
     #[Route('/new', name: '_new')]

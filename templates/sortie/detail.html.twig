@@ -3,72 +3,129 @@
 {% block title %}Détails de la sortie{% endblock %}
 
 {% block body %}
-    <h1>Détails de la sortie</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Détails de la sortie</h1>
 
-    <h2>{{ sortie.nom }}</h2>
-    <p><strong>Date de la sortie :</strong> {{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</p>
-    <p><strong>Description :</strong> {{ sortie.infosSortie }}</p>
+        <!-- Nom de la sortie -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2>{{ sortie.nom }}</h2>
+            </div>
+        </div>
 
-    {# Affichage des informations du lieu #}
-    <h3>Lieu de la sortie</h3>
-    <p><strong>Nom :</strong> {{ sortie.lieu.nom }}</p> {# Affiche le nom du lieu #}
-    <p><strong>Rue :</strong> {{ sortie.lieu.rue }}</p>
-    <p><strong>Latitude :</strong> {{ sortie.lieu.latitude }}</p> {# Affiche la latitude (si disponible) #}
-    <p><strong>Longitude :</strong> {{ sortie.lieu.longitude }}</p> {# Affiche la longitude (si disponible) #}
+        <!-- Informations sur la sortie -->
+        <div class="row mb-3">
+            <div class="col">
+                <p><strong>Date de la sortie :</strong> {{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</p>
+                <p><strong>Description :</strong> {{ sortie.infosSortie }}</p>
+            </div>
+        </div>
 
-    {# Affichage de la ville de l'organisateur #}
-    <h3>Organisateur</h3>
-    <p><strong>Nom de l'organisateur :</strong> {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</p>
-    <p><strong>Ville :</strong> {{ sortie.lieu.ville.nom }}</p> {# Affiche la rue (si disponible) #}
+        <!-- Informations sur le lieu -->
+        <div class="row mb-3">
+            <div class="col">
+                <h3>Lieu de la sortie</h3>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Nom :</strong> {{ sortie.lieu.nom }}</li>
+                    <li class="list-group-item"><strong>Rue :</strong> {{ sortie.lieu.rue }}</li>
+                    <li class="list-group-item"><strong>Latitude :</strong> {{ sortie.lieu.latitude }}</li>
+                    <li class="list-group-item"><strong>Longitude :</strong> {{ sortie.lieu.longitude }}</li>
+                </ul>
+            </div>
+        </div>
 
-    <p><strong>Clôture des inscriptions :</strong> {{ sortie.dateLimiteInscription | date('d/m/Y') }}</p>
-    <p><strong>Places disponibles :</strong> {{ sortie.nbInscriptionsMax - sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }}</p>
-    <p><strong>Etat :</strong> {{ sortie.etat.libelle }}</p>
+        <!-- Row for map and participants -->
+        <div class="row mb-4">
+            <!-- Column for the map (left side) -->
+            <div class="col-md-6 order-md-1 mb-4">
+                <h3 class="text-center">Emplacement de la sortie</h3>
+                <div id="map" style="height: 300px; width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);"></div>
+            </div>
 
-    <h3>Participants inscrits</h3>
+            <!-- Column for participants (right side) -->
+            <div class="col-md-6 order-md-2">
+                <h3 class="text-center">Participants inscrits</h3>
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>Pseudo</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for inscription in sortie.inscriptions %}
+                        <tr>
+                            <td>{{ inscription.participant.pseudo }}</td>
+                            <td>{{ inscription.participant.nom }}</td>
+                            <td>{{ inscription.participant.prenom }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center">Aucun participant inscrit pour cette sortie.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Pseudo</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for inscription in sortie.inscriptions %}
-            <tr>
-                <td>{{ inscription.participant.pseudo }}</td>
-                <td>{{ inscription.participant.nom }}</td>
-                <td>{{ inscription.participant.prenom }}</td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">Aucun participant inscrit pour cette sortie.</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- Informations sur l'organisateur -->
+        <div class="row mb-3">
+            <div class="col">
+                <h3>Organisateur</h3>
+                <p><strong>Nom de l'organisateur :</strong> {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</p>
+                <p><strong>Ville :</strong> {{ sortie.lieu.ville.nom }}</p>
+            </div>
+        </div>
 
-    {% if app.user %}
-        {% if sortie.etat.libelle == 'Créée' %}
-            {% set isInscribed = false %}
-            {% for inscription in sortie.inscriptions %}
-                {% if inscription.participant.id == app.user.id %}
-                    {% set isInscribed = true %}
+        <!-- Informations sur la clôture des inscriptions -->
+        <div class="row mb-3">
+            <div class="col">
+                <p><strong>Clôture des inscriptions :</strong> {{ sortie.dateLimiteInscription | date('d/m/Y') }}</p>
+                <p><strong>Places disponibles :</strong> {{ sortie.nbInscriptionsMax - sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }}</p>
+                <p><strong>Etat :</strong> {{ sortie.etat.libelle }}</p>
+            </div>
+        </div>
+
+        <!-- Boutons d'inscription ou désinscription -->
+        {% if app.user %}
+            {% if sortie.etat.libelle == 'Créée' %}
+                {% set isInscribed = false %}
+                {% for inscription in sortie.inscriptions %}
+                    {% if inscription.participant.id == app.user.id %}
+                        {% set isInscribed = true %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if isInscribed %}
+                    <a class="btn btn-danger" href="{{ path('app_sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ path('app_sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
                 {% endif %}
-            {% endfor %}
-
-            {% if isInscribed %}
-                <a class="btn btn-danger" href="{{ path('app_sortie_desister', {'id': sortie.id}) }}">Se désister</a>
-            {% else %}
-                <a class="btn btn-primary" href="{{ path('app_sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
             {% endif %}
+        {% else %}
+            <p>Vous devez être connecté pour vous inscrire ou vous désister.</p>
         {% endif %}
-    {% else %}
-        <p>Vous devez être connecté pour vous inscrire ou vous désister.</p>
-    {% endif %}
 
-    <br>
-    <a class="btn btn-info" href="{{ path('sortie_list') }}">Retour à la liste des sorties</a>
+        <br>
+        <!-- Bouton Retour -->
+        <a class="btn btn-info mt-4" href="{{ path('sortie_list') }}">Retour à la liste des sorties</a>
+    </div>
+
+    <script async src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
+    <script>
+        function initMap() {
+            const location = { lat: {{ sortie.lieu.latitude }}, lng: {{ sortie.lieu.longitude }} };
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: location,
+            });
+
+            new google.maps.Marker({
+                position: location,
+                map: map,
+            });
+        }
+    </script>
 {% endblock %}
