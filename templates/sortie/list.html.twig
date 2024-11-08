@@ -129,17 +129,13 @@
                                    href="{{ path('sortie_detail', {'id': sortie.id}) }}">Afficher</a>
                             {% endif %}
 
-
                             {% if app.user and (app.user.id == sortie.organisateur.id ) %}
                                 {% if sortie.etat.libelle == 'Créée' %}
                                     <a href="{{ path('sortie_delete', {'id': sortie.id,'token': csrf_token('delete'~sortie.id) }) }}"
                                        class="btn btn-danger">Annuler</a>
                                 {% elseif sortie.etat.libelle == 'En création' %}
-                                    <button href="{{ path('sortie_update', {'id': sortie.id}) }}"
-                                            class="btn btn-info"
-                                            name="submit" value="publier"
-                                    >Publier
-                                    </button>
+                                    <a class="btn btn-info"
+                                       href="{{ path('sortie_changer_etat', {'id': sortie.id, 'etat': 'Créée'}) }}">Publier</a>
                                 {% endif %}
                             {% else %}
                                 {% if sortie.etat.libelle == 'Créée' %}
@@ -158,7 +154,6 @@
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
-
                         </td>
                     </tr>
                 {% endfor %}

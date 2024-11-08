@@ -118,6 +118,7 @@ class SortieController extends AbstractController
             $sortie->setSite($user->getSite());
             $entityManager->persist($sortie);
             $entityManager->flush();
+            $this->addFlash('success', 'La sortie a été créée avec succès !');
             return $this->redirectToRoute('sortie_list');
         }
         return $this->render('sortie/new.html.twig', [
@@ -149,6 +150,7 @@ class SortieController extends AbstractController
             }
             $entityManager->persist($sortie);
             $entityManager->flush();
+            $this->addFlash('success', 'La sortie a été modifée avec succès !');
             return $this->redirectToRoute('sortie_list');
         }
         return $this->render('sortie/new.html.twig', [
@@ -178,5 +180,25 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('sortie_list');
     }
 
+    #[Route('/sortie/etat/{id}/{etat}', name: '_changer_etat', requirements: ['id' => '\d+', 'etat' => '.+'])]
+    public function changerEtat(Sortie $sortie, string $etat, EntityManagerInterface $entityManager): Response
+    {
+        $connectedUser = $this->getUser();
+        if ($connectedUser->getId() === $sortie->getOrganisateur()->getId()) {
+            // Trouver l'état souhaité
+            $nouvelEtat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => $etat]);
+            if (!$nouvelEtat) {
+                throw $this->createNotFoundException('L\'état spécifié est introuvable.');
+            }
+
+            // Mettre à jour l'état de la sortie
+            $sortie->setEtat($nouvelEtat);
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+        }
+        // Rediriger ou retourner une réponse appropriée
+        $this->addFlash('success', 'La sortie a été publiée avec succès.');
+        return $this->redirectToRoute('sortie_list'); // Ou toute autre route souhaitée
+    }
 }
 
