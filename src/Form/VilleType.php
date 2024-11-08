@@ -14,6 +14,8 @@ class VilleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $submitLabel = $options['submit_label'];
+
         $builder
             ->add('codePostal', TextType::class, [
                 'label' => 'Code Postal',
@@ -26,10 +28,11 @@ class VilleType extends AbstractType
                 'required' => true,
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Ajouter',
+                'label' =>$submitLabel,
                 'attr' => ['class' => 'btn btn-info']
             ])
-
+        ;
+    }
 
             /*
 
@@ -38,13 +41,13 @@ class VilleType extends AbstractType
             ->add ('submit', SubmitType::class, [
                 'label' => 'Ajouter'])
             */
-        ;
-    }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Ville::class,
+            'submit_label' => 'Submit',
         ]);
     }
 }
