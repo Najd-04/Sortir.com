@@ -92,7 +92,7 @@
                     <tr>
                         <td>{{ sortie.nom }}</td>
                         <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
-                        <td>{{ sortie.dateLimiteInscription | date('d/m/Y') }}</td>
+                        <td>{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</td>
                         <td>{{ sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }}</td>
                         <td>{{ sortie.etat.libelle }}</td>
                         <td>
@@ -142,6 +142,6 @@
         </div>
 
         {# Bouton "Créer une sortie" visible uniquement sur les écrans de taille moyenne et plus #}
-        <a href="{{ path('sortie_new') }}" class="btn btn-primary d-none d-md-inline mt-3" aria-hidden="true">Créer une sortie</a>
+        <a href="{{ path('sortie_new') }}" class="btn btn-primary d-none d-sm-inline mt-3" aria-hidden="true">Créer une sortie</a>
     </div>
 {% endblock %}
