@@ -20,7 +20,9 @@ class LieuType extends AbstractType
             ->add('longitude')
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
-                'choice_label' => 'nom',
+                'choice_label' => function ($ville) {
+                    return $ville->getNom() . ' ' . $ville->getCodePostal();
+                },
                 'required' => false,
                 'placeholder' => "--Sélectionnez une ville existante--",
             ]);
