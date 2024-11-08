@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+{#  {{ form(form) }} #}
+
+  <H2> Modifier la ville</H2>
+
+  {{  form_start(form) }}
+  {{ form_row(form.codePostal) }}
+  {{ form_row(form.nom) }}
+  {{ form_row(form.submit) }}
+  {{ form_end(form) }}
+
+{% endblock %}

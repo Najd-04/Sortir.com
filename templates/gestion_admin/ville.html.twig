@@ -4,9 +4,8 @@
 
 {% block body %}
 
-{#    {{ component('Alert', {message: 'Hello Twig Components!'}) }}
-#}
-    {% include 'components/ModalEditObject.html.twig' %}
+    {#    {{ component('Alert', {message: 'Hello Twig Components!'}) }}
+    #}
 
 
     <h1 class="h1"> Gérer les villes</h1>
@@ -15,12 +14,12 @@
 
     <form action="" class="form-group row">
 
-<div class="col">
-        <label for="champ-recherche" >Le nom contient : </label>
-</div>
+        <div class="col">
+            <label for="champ-recherche">Le nom contient : </label>
+        </div>
         <div class="col">
 
-        <input class="form-control" type="search" id="champ-recherche" name="q">
+            <input class="form-control" type="search" id="champ-recherche" name="q">
         </div>
         <div class="col">
             <button class="btn btn-info">Chercher</button>
@@ -43,17 +42,19 @@
                     <td>{{ ville.codePostal }}</td>
                     <td>{{ ville.nom }}</td>
                     <td>
+
+                        <a class="btn btn-danger" href="{{ path('admin_ville-delete', {'id' : ville.id}) }}">
+                            Supprimer </a>
+                        <a class="btn btn-warning" href="{{ path('admin_ville-update', {'id' : ville.id}) }}">
+                            Modifier </a>
+
+
                         {#
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">
-                            Modifier
-                        </button>
-                        #}
-                        <a class="btn btn-danger" href="{{ path('admin_ville-delete', {'id' : ville.id}) }}"> Supprimer </a>
-                        <!-- Button to trigger the modal -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalEditObject"
                                 data-ville-json="{{ ville|json_encode }}">
                             Modifier
                         </button>
+                        #}
                         {#
                         <a {#  href="{{ path('edit_item', {'id': item.id}) }}" class="btn btn-warning">Modifier</a>
                         #}
@@ -62,10 +63,10 @@
             {% endfor %}
             </tbody>
         </table>
-</div>
-        <h2 class="h2">Ajouter une ville</h2>
+    </div>
+    <h2 class="h2">Ajouter une ville</h2>
 
-        <form action="{{ path('admin_ville') }}" method="POST">
+    <form action="{{ path('admin_ville') }}" method="POST">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -80,66 +81,44 @@
                 </th>
                 <th>
                     {{ form_label(inputForm.nom) }}
-                 {#   <label for="ville">
+                    {#   <label for="ville">
                         Code Postal
                     </label>
-                 #}
+                    #}
                 </th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>/</td>
-                    <td>
-                        {{ form_widget(inputForm.codePostal) }}
-                        {{ form_errors(inputForm.codePostal) }}
-                        {#
-                        <input id="code-postal" type="text" name="code-postal" class="form-control" placeholder="Code Postal" required>
-                        #}
-                    </td>
-                    <td>
-                        {{ form_widget(inputForm.nom) }}
-                        {{ form_errors(inputForm.nom) }}
-                        {#
-                        <input id="ville" type="text" name="ville" class="form-control" placeholder="Ville" required>
-                        #}
-                    </td>
-                    <td>
-                        {{ form_widget(inputForm.submit) }}
-                        {#
-                        <input {#  href="{{ path('edit_item', {'id': item.id}) }}"  type="submit" value="Ajouter" class="btn btn-info"></input>
-                        #}
-                    </td>
-                </tr>
+            <tr>
+                <td>/</td>
+                <td>
+                    {{ form_widget(inputForm.codePostal) }}
+                    {{ form_errors(inputForm.codePostal) }}
+                    {#
+                    <input id="code-postal" type="text" name="code-postal" class="form-control" placeholder="Code Postal" required>
+                    #}
+                </td>
+                <td>
+                    {{ form_widget(inputForm.nom) }}
+                    {{ form_errors(inputForm.nom) }}
+                    {#
+                    <input id="ville" type="text" name="ville" class="form-control" placeholder="Ville" required>
+                    #}
+                </td>
+                <td>
+                    {{ form_widget(inputForm.submit) }}
+                    {#
+                    <input {#  href="{{ path('edit_item', {'id': item.id}) }}"  type="submit" value="Ajouter" class="btn btn-info"></input>
+                    #}
+                </td>
+            </tr>
 
             </tbody>
         </table>
-            {{ form_end(inputForm) }}
-        </form>
+        {{ form_end(inputForm) }}
+    </form>
 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#modalEditObject').on('show.bs.modal', function (event) {
-                let button = $(event.relatedTarget); // Button that triggered the modal
-                let villeJson = button.data('ville-json');
-                let ville = JSON.parse(villeJson);
-
-                // Populate the modal with the corresponding data
-                let modal = $(this);
-                modal.find('#nom').val(ville.nom);
-                modal.find('#code_postal').val(ville.codePostal);
-                modal.find('#ville_id').val(ville.id)
-
-                modal.find('form').attr('action', 'admin/villes/update/' + ville.id);
-
-              //  modal.find('#ville-id').val(villeId)
-                               // Optional: You can store the ville ID in the form or modal if needed
-               // modal.find('form').attr('action', '/ville/update/' + villeId);  // Update action URL
-            });
-        });
-    </script>
 
 
 
