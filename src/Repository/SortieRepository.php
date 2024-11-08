@@ -28,7 +28,9 @@ class SortieRepository extends ServiceEntityRepository
         ?Etat        $etatPasse,
         ?Participant $organisateur,
         ?Participant $isInscrit, // Participant inscrit
-        ?Participant $isNotInscrit // Participant non inscrit
+        ?Participant $isNotInscrit, // Participant non inscrit
+        Participant  $connectedUser, // L'utilisateur connecté
+        Etat $etatEnCreation // L'état "En création"
     ): array
     {
         $query = $this->createQueryBuilder('s')
@@ -88,6 +90,10 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('isNotInscrit', $isNotInscrit);
         }
 
+        // Condition pour afficher les sorties "En création" uniquement si l'utilisateur est l'organisateur
+        $query->andWhere('s.etat != :etatEnCreation OR s.organisateur = :connectedUser')
+            ->setParameter('etatEnCreation', $etatEnCreation)
+            ->setParameter('connectedUser', $connectedUser);
 
         return $query->getQuery()->getResult();
     }

@@ -75,29 +75,29 @@ class SortieType extends AbstractType
                 'mapped' => false,
                 'choices' => [] // Initialement vide
             ])
-            ->add('site', EntityType::class, [
-                'label' => 'Site',
-                'class' => Site::class,
-                'choice_label' => 'nom',
-                'placeholder' => '--Sélectionnez un site existant--',
-                'required' => false,
-            ])
-            ->add('etat', EntityType::class, [
-                'label' => 'Etat',
-                'class' => Etat::class,
-                'placeholder' => '--Sélectionnez un état--',
-                'choice_label' => 'libelle',
-                'required' => false,
-            ])
-            ->add('organisateur', EntityType::class, [
-                'label' => 'Organisateur',
-                'placeholder' => '--Sélectionnez un oraginateur--',
-                'class' => Participant::class,
-                'choice_label' => function ($utilisateur) {
-                    return $utilisateur->getPrenom() . ' ' . $utilisateur->getNom();
-                },
-                'required' => false,
-            ])
+//            ->add('site', EntityType::class, [
+//                'label' => 'Site',
+//                'class' => Site::class,
+//                'choice_label' => 'nom',
+//                'placeholder' => '--Sélectionnez un site existant--',
+//                'required' => false,
+//            ])
+//            ->add('etat', EntityType::class, [
+//                'label' => 'Etat',
+//                'class' => Etat::class,
+//                'placeholder' => '--Sélectionnez un état--',
+//                'choice_label' => 'libelle',
+//                'required' => false,
+//            ])
+//            ->add('organisateur', EntityType::class, [
+//                'label' => 'Organisateur',
+//                'placeholder' => '--Sélectionnez un oraginateur--',
+//                'class' => Participant::class,
+//                'choice_label' => function ($utilisateur) {
+//                    return $utilisateur->getPrenom() . ' ' . $utilisateur->getNom();
+//                },
+//                'required' => false,
+//            ])
             ->add('addLieu', ButtonType::class, [
                 'label' => '<i class="bi bi-plus-square"></i>',
                 'attr' => [
@@ -106,10 +106,10 @@ class SortieType extends AbstractType
                     'style' => ''
                 ],
                 'label_html' => true,  // Permet de rendre l'HTML dans le label
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer la sortie',
             ]);
+//            ->add('submit', SubmitType::class, [
+//                'label' => 'Enregistrer la sortie',
+//            ]);
 
         // Ajouter l'événement PRE_SET_DATA pour ajouter dynamiquement le champ de lieu
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

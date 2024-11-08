@@ -6,7 +6,8 @@
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h1">Filtrer les sorties</h1>
-            <a href="{{ path('sortie_new') }}" class="btn btn-primary d-none d-md-inline" aria-hidden="true">Créer une sortie</a>
+            <a href="{{ path('sortie_new') }}" class="btn btn-primary d-none d-md-inline" aria-hidden="true">Créer une
+                sortie</a>
         </div>
 
         <div class="position-fixed end-0 text-end">
@@ -30,7 +31,8 @@
 
                 <div class="col-md-6 mb-3">
                     <label for="nom" class="form-label">Le nom de la sortie contient :</label>
-                    <input id="nom" type="text" name="nom" value="{{ nom }}" placeholder="Renseignez une sortie" class="form-control">
+                    <input id="nom" type="text" name="nom" value="{{ nom }}" placeholder="Renseignez une sortie"
+                           class="form-control">
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -45,25 +47,29 @@
 
                 <div class="col-12 col-md-6">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="organisateur_checked" value="true" {% if organisateur_checked %} checked {% endif %} id="isOrganisateur">
+                        <input class="form-check-input" type="checkbox" name="organisateur_checked"
+                               value="true" {% if organisateur_checked %} checked {% endif %} id="isOrganisateur">
                         <label class="form-check-label" for="isOrganisateur">
                             Sortie dont je suis l'organisateur/trice
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="is_inscrit_checked" value="true" {% if is_inscrit_checked %} checked {% endif %} id="isInscrit">
+                        <input class="form-check-input" type="checkbox" name="is_inscrit_checked"
+                               value="true" {% if is_inscrit_checked %} checked {% endif %} id="isInscrit">
                         <label class="form-check-label" for="isInscrit">
                             Sorties auxquelles je suis inscrit/e
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="is_not_inscrit_checked" value="true" {% if is_not_inscrit_checked %} checked {% endif %} id="isNotInscrit">
+                        <input class="form-check-input" type="checkbox" name="is_not_inscrit_checked"
+                               value="true" {% if is_not_inscrit_checked %} checked {% endif %} id="isNotInscrit">
                         <label class="form-check-label" for="isNotInscrit">
                             Sorties auxquelles je ne suis pas inscrit/e
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="sortie_passee" value="true" {% if sortie_passee %} checked {% endif %} id="end_date">
+                        <input class="form-check-input" type="checkbox" name="sortie_passee"
+                               value="true" {% if sortie_passee %} checked {% endif %} id="end_date">
                         <label class="form-check-label" for="end_date">
                             Sorties passées
                         </label>
@@ -106,34 +112,53 @@
                         </td>
                         <td>
                             {% if sortie.organisateur.pseudo %}
-                                <a href="{{ path('app_profile', {'id': sortie.organisateur.id}) }}" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ sortie.organisateur.pseudo }}</a>
+                                <a href="{{ path('app_profile', {'id': sortie.organisateur.id}) }}"
+                                   class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ sortie.organisateur.pseudo }}</a>
                             {% else %}
                                 <a href="{{ path('app_profile', {'id': sortie.organisateur.id}) }}">
-                                    {{ sortie.organisateur.prenom|capitalize }} {{ sortie.organisateur.nom|slice(0, 1)|upper }}.
+                                    {{ sortie.organisateur.prenom|capitalize }} {{ sortie.organisateur.nom|slice(0, 1)|upper }}
+                                    .
                                 </a>
                             {% endif %}
                         </td>
                         <td>
-                            {% if sortie.etat.libelle == 'En création' %}
+                            {% if sortie.etat.libelle == 'En création' and (app.user and (app.user.id == sortie.organisateur.id) ) %}
                                 <a class="btn btn-warning" href="{{ path('sortie_update', {'id': sortie.id}) }}">Modifier</a>
                             {% else %}
-                                <a class="btn btn-info" href="{{ path('sortie_detail', {'id': sortie.id}) }}">Afficher</a>
+                                <a class="btn btn-info"
+                                   href="{{ path('sortie_detail', {'id': sortie.id}) }}">Afficher</a>
                             {% endif %}
 
-                            {% if sortie.etat.libelle == 'Créée' %}
-                                {% set isInscribed = false %}
-                                {% for inscription in sortie.inscriptions %}
-                                    {% if inscription.participant.id == app.user.id %}
-                                        {% set isInscribed = true %}
-                                    {% endif %}
-                                {% endfor %}
 
-                                {% if isInscribed %}
-                                    <a class="btn btn-danger" href="{{ path('app_sortie_desister', {'id': sortie.id}) }}">Se désister</a>
-                                {% else %}
-                                    <a class="btn btn-primary" href="{{ path('app_sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
+                            {% if app.user and (app.user.id == sortie.organisateur.id ) %}
+                                {% if sortie.etat.libelle == 'Créée' %}
+                                    <a href="{{ path('sortie_delete', {'id': sortie.id,'token': csrf_token('delete'~sortie.id) }) }}"
+                                       class="btn btn-danger">Annuler</a>
+                                {% elseif sortie.etat.libelle == 'En création' %}
+                                    <button href="{{ path('sortie_update', {'id': sortie.id}) }}"
+                                            class="btn btn-info"
+                                            name="submit" value="publier"
+                                    >Publier
+                                    </button>
+                                {% endif %}
+                            {% else %}
+                                {% if sortie.etat.libelle == 'Créée' %}
+                                    {% set isInscribed = false %}
+                                    {% for inscription in sortie.inscriptions %}
+                                        {% if inscription.participant.id == app.user.id %}
+                                            {% set isInscribed = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if isInscribed %}
+                                        <a class="btn btn-danger"
+                                           href="{{ path('app_sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+                                    {% else %}
+                                        <a class="btn btn-primary"
+                                           href="{{ path('app_sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
+
                         </td>
                     </tr>
                 {% endfor %}
@@ -142,6 +167,7 @@
         </div>
 
         {# Bouton "Créer une sortie" visible uniquement sur les écrans de taille moyenne et plus #}
-        <a href="{{ path('sortie_new') }}" class="btn btn-primary d-none d-sm-inline mt-3" aria-hidden="true">Créer une sortie</a>
+        <a href="{{ path('sortie_new') }}" class="btn btn-primary d-none d-sm-inline mt-3" aria-hidden="true">Créer une
+            sortie</a>
     </div>
 {% endblock %}
