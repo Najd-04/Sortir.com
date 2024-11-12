@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
@@ -52,9 +53,18 @@ class RegistrationFormType extends AbstractType
         'label' => 'Téléphone',
         'required' => false,
         'constraints' => [
-          new Length(['max' => 10]),
+          new Length([
+            'max' => 10,
+            'min' => 10, // Assure que le numéro contient exactement 10 caractères
+            'exactMessage' => 'Le numéro de téléphone doit contenir exactement 10 chiffres.'
+          ]),
+          new Regex([
+            'pattern' => '/^\d{10}$/', // Accepte uniquement les numéros avec 10 chiffres
+            'message' => 'Veuillez entrer un numéro de téléphone valide de 10 chiffres, sans espaces ni caractères spéciaux.'
+          ]),
         ],
       ])
+
       ->add('email', EmailType::class, [
         'label' => 'Email',
         'required' => true,

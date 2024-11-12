@@ -10,8 +10,12 @@ use App\Helper\ImbricateForm;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/sortie', name: 'sortie')]
@@ -200,5 +204,60 @@ class SortieController extends AbstractController
         $this->addFlash('success', 'La sortie a été publiée avec succès.');
         return $this->redirectToRoute('sortie_list'); // Ou toute autre route souhaitée
     }
+  #[Route('/cancel/{id}', name: '_cancel', requirements: ['id' => '\d+'])]
+  public function cancel(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+  {
+    $connectedUser = $this->getUser();
+    if (!$sortie) {
+      throw $this->createNotFoundException('La sortie demandée n\'existe pas.');
+    }
+
+    // Vérifie si l'utilisateur connecté est l'organisateur
+    if ($connectedUser->getId() !== $sortie->getOrganisateur()->getId()) {
+      $this->addFlash('danger', 'Vous ne pouvez pas annuler cette sortie car vous n\'êtes pas l\'organisateur.');
+      return $this->redirectToRoute('sortie_list');
+    }
+
+    // Créer un formulaire pour le motif de l'annulation
+    $form = $this->createFormBuilder()
+      ->add('motif', TextareaType::class, [
+        'label' => 'Motif de l\'annulation',
+        'required' => true,
+        'attr' => ['placeholder' => 'Veuillez préciser le motif de l\'annulation...']
+      ])
+      ->getForm();
+
+    $form->handleRequest($request);
+
+    // Si le formulaire est soumis et valide
+    if ($form->isSubmitted() && $form->isValid()) {
+      $data = $form->getData();
+      $motif = $data['motif'];
+
+      // Envoi d'un email aux participants inscrits
+      foreach ($sortie->getInscriptions() as $inscription) {
+        $participant = $inscription->getParticipant();
+        $email = (new Email())
+          ->from('noreply@example.com')
+          ->to($participant->getEmail())
+          ->subject('Annulation de la sortie : ' . $sortie->getNom())
+          ->text("Bonjour {$participant->getPrenom()},\n\nLa sortie '{$sortie->getNom()}' prévue pour le {$sortie->getDateHeureDebut()->format('d/m/Y')} a été annulée.\n\nMotif : {$motif}.\n\nCordialement,\nL'équipe.");
+
+        $mailer->send($email);
+      }
+
+      // Enregistrer l'annulation ou toute action supplémentaire si nécessaire
+      $entityManager->flush();
+
+      $this->addFlash('success', 'La sortie a été annulée et les participants ont été informés par email.');
+
+      return $this->redirectToRoute('sortie_list');
+    }
+    // Afficher la page d'annulation
+    return $this->render('sortie/cancel.html.twig', [
+      'sortie' => $sortie,
+      'form' => $form->createView(),
+    ]);
+  }
 }
 
