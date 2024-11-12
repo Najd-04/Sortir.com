@@ -131,7 +131,7 @@
 
                             {% if app.user and (app.user.id == sortie.organisateur.id ) %}
                                 {% if sortie.etat.libelle == 'Créée' %}
-                                    <a href="{{ path('sortie_delete', {'id': sortie.id,'token': csrf_token('delete'~sortie.id) }) }}"
+                                    <a href="{{ path('sortie_cancel', { 'id': sortie.id }) }}"
                                        class="btn btn-danger">Annuler</a>
                                 {% elseif sortie.etat.libelle == 'En création' %}
                                     <a class="btn btn-info"

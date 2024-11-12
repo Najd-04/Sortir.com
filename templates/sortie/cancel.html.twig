@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuler la sortie{% endblock %}
+
+{% block body %}
+  <h1>Annuler la sortie : {{ sortie.nom }}</h1>
+
+  <p><strong>Date de la sortie :</strong> {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</p>
+  <p><strong>Ville organisatrice :</strong> {{ sortie.organisateur.site.nom }}</p>
+
+  {{ form_start(form) }}
+  {{ form_row(form.motif) }}
+  {{ form_end(form) }}
+  {% if app.user and (app.user.id == sortie.organisateur.id ) %}
+    {% if sortie.etat.libelle == 'Créée' %}
+      <a class="btn btn-info"
+         href="{{ path('sortie_changer_etat', {'id': sortie.id, 'etat': 'Annulée'}) }}">Annuler</a>
+    {% endif %}
+  {% endif %}
+  <a href="{{ path('sortie_list') }}" class="btn btn-secondary mt-3">Retour à la liste des sorties</a>
+{% endblock %}
