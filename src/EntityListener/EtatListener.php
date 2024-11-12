@@ -14,7 +14,7 @@ class EtatListener
     ) {}
 
     public function postLoad(Sortie $sortie): void{
-        $etat = $this->etatRepository->findOneBy(['libelle' => 'Cloturée']);
+        $etat = $this->etatRepository->findOneBy(['libelle' => 'Clôturée']);
 
         if ($sortie->getDateLimiteInscription() >= new \DateTime()){
             $sortie->setEtat($etat);
