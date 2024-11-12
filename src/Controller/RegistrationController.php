@@ -50,7 +50,7 @@ class RegistrationController extends AbstractController
           // Handle exception during file upload
         }
       }
-
+      $user->setRoles(['ROLE_USER']);
       $entityManager->persist($user);
       $entityManager->flush();
       $this->addFlash('success', 'Inscription réussie ! Vous pouvez maintenant vous connecter.');
