@@ -25,7 +25,7 @@ class SortieController extends AbstractController
   #[Route('/list', name: '_list')]
   public function index(SortieRepository $repository, EntityManagerInterface $entityManager, Request $request): Response
   {
-    $etatEnCreation = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
+    $etatEnCreation = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Brouillon']);
     $connectedUser = $this->getUser();
 
     $sites = $entityManager->getRepository(Site::class)->findAll();
@@ -41,7 +41,7 @@ class SortieController extends AbstractController
 
     $etat = null;
     if ($sortiePassee) {
-      $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'passée']);
+      $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Clôturée']);
     }
 
     $organisateur = null;
@@ -110,9 +110,9 @@ class SortieController extends AbstractController
       // Vérifier quel bouton a été cliqué
       $submittedButton = $request->get('submit');
       if ($submittedButton === 'enregistrer') {
-        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
+        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Brouillon']);
       } elseif ($submittedButton === 'publier') {
-        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
       } else {
         throw new \Exception('Bouton de soumission non reconnu');
       }
@@ -142,9 +142,9 @@ class SortieController extends AbstractController
         // Vérifier quel bouton a été cliqué
         $submittedButton = $request->get('submit');
         if ($submittedButton === 'enregistrer') {
-          $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
+          $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Brouillon']);
         } elseif ($submittedButton === 'publier') {
-          $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+          $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
         } else {
           throw new \Exception('Bouton de soumission non reconnu');
         }
