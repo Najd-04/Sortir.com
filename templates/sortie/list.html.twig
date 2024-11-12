@@ -158,6 +158,11 @@
                                 {% endif %}
 
                             {% else %}
+                                {# Création d'une boucle et d'une variable locale.
+                                On définit la variable isInscribed à false.
+                                On parcourt la table incription dans la bdd.
+                                Si jamais on trouve l'id d'un participant qui matche l'id de l'utilisateur connecté,
+                                Alors on hydrate la variable isSubscribed avec la valeur "true"#}
                                 {% if sortie.etat.libelle == 'Créée' %}
                                     {% set isInscribed = false %}
                                     {% for inscription in sortie.inscriptions %}
@@ -165,10 +170,20 @@
                                             {% set isInscribed = true %}
                                         {% endif %}
                                     {% endfor %}
+
+                                    {# Puis, si la variable "isSubcribed est "true", alors on affiche les boutons
+                                    "se désister"#}
+
+                                    {# todo: ajouter la condition de l'état de la sortie. Pour se désister, l'état de la sortie ne doit pas être "en cours"#}
+
                                     {% if isInscribed %}
                                         <a class="btn btn-danger"
                                            href="{{ path('app_sortie_desister', {'id': sortie.id}) }}">Se désister</a>
                                     {% else %}
+                                        {# Si la variable isSubscribed n'est pas en valeur "true", alors on affiche le bouton
+                                        "s'inscrire"
+                                        #}
+                                        {# todo: ajouter la condition de si l'état de la sortie est "cloturé" alors on ne peut s'inscrire #}
                                         <a class="btn btn-primary"
                                            href="{{ path('app_sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
                                     {% endif %}
