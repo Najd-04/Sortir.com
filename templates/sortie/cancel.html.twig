@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuler la sortie{% endblock %}
+
+{% block body %}
+  <div class="container mt-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-danger text-white">
+        <h2 class="h4">Annuler la sortie : {{ sortie.nom }}</h2>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <p><strong>Date de la sortie :</strong> {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</p>
+          <p><strong>Ville organisatrice :</strong> {{ sortie.organisateur.site.nom }}</p>
+        </div>
+        <hr>
+
+        <h5 class="h6 mb-3">Motif</h5>
+        {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+        <div class="form-group mb-3">
+          {{ form_row(form.motif, {'attr': {'class': 'form-control', 'placeholder': 'Indiquez le motif d\'annulation'}}) }}
+        </div>
+        <div class="d-flex justify-content-between">
+          {% if app.user and app.user.id == sortie.organisateur.id and sortie.etat.libelle == 'Créée' %}
+            <a href="{{ path('sortie_changer_etat', {'id': sortie.id, 'etat': 'Annulée'}) }}"
+               class="btn btn-danger">Confirmer l'annulation</a>
+          {% endif %}
+          <a href="{{ path('sortie_list') }}" class="btn btn-secondary">Retour à la liste des sorties</a>
+        </div>
+        {{ form_end(form) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
