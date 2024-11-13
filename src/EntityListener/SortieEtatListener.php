@@ -28,13 +28,14 @@ class SortieEtatListener
 
         $now = new \DateTime();
 
-        if ($dateLimiteInscription >= $now && $dateLimiteInscription < $dateDebutSortie){
-            $sortie->setEtat($cloturee);
-        }
-
         if ($now > $dateDebutSortie && $now < $dateFinSortie) {
             $sortie->setEtat($enCours);
         }
+
+        if ($dateLimiteInscription <= $now && $dateLimiteInscription < $dateDebutSortie){
+            $sortie->setEtat($cloturee);
+        }
+
 
         if ($now > $dateFinSortie) {
             $sortie->setEtat($terminee);
