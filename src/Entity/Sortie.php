@@ -25,10 +25,9 @@ class Sortie
     #[Assert\NotBlank(message: "Veuillez renseigner un nom de sortie")]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\GreaterThan('today', message: 'La date d\'inscription ne peut pas être antérieur à la date actuelle')]
-    #[Assert\NotBlank(message: "La date ne peut pas être vide.")]
-    #[Assert\NotNull(message: "La date de début ne peut pas être null.")]
+    #[Assert\NotBlank(message: "La date d\'inscription ne peut pas être vide")]
     #[Assert\Type(type: "\DateTimeInterface", message: "La valeur doit être une date valide.")]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
@@ -37,9 +36,9 @@ class Sortie
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\LessThan(propertyPath: "dateHeureDebut", message: 'La date de cloture doit être antérieur à la date de sortie')]
-    #[Assert\NotBlank(message: "La date ne peut pas être vide.")]
-    #[Assert\NotNull(message: "La date de début ne peut pas être null.")]
+    #[Assert\GreaterThan('today', message: 'La date limite d\'inscription ne peut pas être antérieur à la date actuelle')]
+    #[Assert\LessThan(propertyPath: "dateHeureDebut", message: 'La date limite d\'inscription doit être antérieur à la date de sortie')]
+    #[Assert\NotBlank(message: "La date limite d\'inscription ne peut pas être vide.")]
     #[Assert\Type(type: "\DateTimeInterface", message: "La valeur doit être une date valide.")]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
@@ -56,6 +55,7 @@ class Sortie
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'Veuillez renseigner un lieu')]
     private ?Lieu $lieu = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
@@ -101,7 +101,7 @@ class Sortie
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): static
+    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut = null): static
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
@@ -125,7 +125,7 @@ class Sortie
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription): static
+    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription = null): static
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 
