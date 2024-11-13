@@ -23,3 +23,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\EntityListener\SortieEtatListener:
+        arguments:
+            $etatRepository: '@App\Repository\EtatRepository'
+        tags:
+            - {name: 'doctrine.orm.entity_listener', event: 'postLoad'}
