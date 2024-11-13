@@ -9,12 +9,14 @@ use App\Form\SortieType;
 use App\Helper\ImbricateForm;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -206,7 +208,12 @@ class SortieController extends AbstractController
   }
 
   #[Route('/cancel/{id}', name: '_cancel', requirements: ['id' => '\d+'])]
-  public function cancel(Request $request, Sortie $sortie, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+  public function cancel(
+    Request                $request,
+    Sortie                 $sortie,
+    EntityManagerInterface $entityManager,
+    MailerInterface        $mailer
+  ): Response
   {
     $connectedUser = $this->getUser();
     if (!$sortie) {
@@ -227,43 +234,48 @@ class SortieController extends AbstractController
         'attr' => ['placeholder' => 'Veuillez préciser le motif de l\'annulation...']
       ])
       ->getForm();
-
     $form->handleRequest($request);
 
     // Si le formulaire est soumis et valide
     if ($form->isSubmitted() && $form->isValid()) {
-      $data = $form->getData();
-      $motif = $data['motif'];
+      $motif = $form->get('motif')->getData();
       if (count($sortie->getInscriptions()) === 0) {
         $this->addFlash('warning', 'Il n\'y a aucun participant inscrit pour cette sortie.');
       } else {
-
-
         // Envoi d'un email aux participants inscrits
         foreach ($sortie->getInscriptions() as $inscription) {
           $participant = $inscription->getParticipant();
-          $email = (new Email())
-            ->from('noreply@example.com')
+
+          // Utilisation d'un template pour l'e-mail
+          $email = (new TemplatedEmail())
+            ->from(new Address('no-reply@sortie.com', 'Admin'))
             ->to($participant->getEmail())
             ->subject('Annulation de la sortie : ' . $sortie->getNom())
-            ->text("Bonjour {$participant->getPrenom()},\n\nLa sortie '{$sortie->getNom()}' prévue pour le {$sortie->getDateHeureDebut()->format('d/m/Y')} a été annulée.\n\nMotif : {$motif}.\n\nCordialement,\nL'équipe.");
-
+            ->htmlTemplate('sortie/annulation.html.twig')
+            ->context([
+              'participant' => $participant,
+              'sortie' => $sortie,
+              'motif' => $motif,
+            ]);
           $mailer->send($email);
         }
       }
 
       // Enregistrer l'annulation ou toute action supplémentaire si nécessaire
+      $sortie->setEtat($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']));
+      $entityManager->persist($sortie);
       $entityManager->flush();
 
       $this->addFlash('success', 'La sortie a été annulée et les participants ont été informés par email.');
 
       return $this->redirectToRoute('sortie_list');
     }
-    // Afficher la page d'annulation
+
     return $this->render('sortie/cancel.html.twig', [
       'sortie' => $sortie,
       'form' => $form->createView(),
     ]);
   }
 }
+
 

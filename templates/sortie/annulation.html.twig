@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Annulation de la sortie</title>
+</head>
+<body>
+<p>Bonjour {{ participant.prenom }},</p>
+
+<p>La sortie <strong>{{ sortie.nom }}</strong> prévue pour le {{ sortie.dateHeureDebut|date('d/m/Y') }} a été annulée.</p>
+
+<p><strong>Motif de l'annulation :</strong> {{ motif }}</p>
+
+<p>Cordialement,<br>
+  L'équipe</p>
+</body>
+</html>

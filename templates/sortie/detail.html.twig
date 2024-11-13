@@ -96,7 +96,7 @@
 
     <!-- Boutons d'inscription ou désinscription -->
     {% if app.user %}
-      {% if sortie.etat.libelle == 'Créée' %}
+      {% if sortie.etat.libelle == 'Publiée' %}
         {% set isInscribed = false %}
         {% for inscription in sortie.inscriptions %}
           {% if inscription.participant.id == app.user.id %}

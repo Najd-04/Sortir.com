@@ -21,9 +21,8 @@
           {{ form_row(form.motif, {'attr': {'class': 'form-control', 'placeholder': 'Indiquez le motif d\'annulation'}}) }}
         </div>
         <div class="d-flex justify-content-between">
-          {% if app.user and app.user.id == sortie.organisateur.id and sortie.etat.libelle == 'Créée' %}
-            <a href="{{ path('sortie_changer_etat', {'id': sortie.id, 'etat': 'Annulée'}) }}"
-               class="btn btn-danger">Confirmer l'annulation</a>
+          {% if app.user and app.user.id == sortie.organisateur.id and sortie.etat.libelle == 'Publiée' %}
+            <button type="submit" class="btn btn-danger">Confirmer l'annulation</button>
           {% endif %}
           <a href="{{ path('sortie_list') }}" class="btn btn-secondary">Retour à la liste des sorties</a>
         </div>
