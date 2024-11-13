@@ -57,7 +57,6 @@ class RegistrationController extends AbstractController
 
       return $this->redirectToRoute('app_login');
     }
-    $this->addFlash('error', 'Inscription échouée !!');
 
     return $this->render('registration/register.html.twig', [
       'registrationForm' => $form,
