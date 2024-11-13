@@ -79,13 +79,12 @@ class SortieType extends AbstractType
                 'label_html' => true,  // Permet de rendre l'HTML dans le label
             ]);
 
-        // Ajouter l'événement PRE_SET_DATA pour ajouter dynamiquement le champ de lieu
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $data = $event->getData();
             $form = $event->getForm();
 
-            // Vérifier une condition pour afficher le sous-formulaire lieu
-//            if ($event->getData() && $event->getData()->getLieu() === null) {
-                // Ajouter dynamiquement le champ de type LieuType
+            // Ajout du champ 'lieu' si la condition est remplie
+            if ($data && $data->getLieu() === null) {
                 $form->add('lieu', LieuType::class, [
                     'label' => 'Nouveau Lieu',
                     'label_attr' => [
@@ -93,15 +92,13 @@ class SortieType extends AbstractType
                     ],
                     'required' => false,
                 ]);
-        });
+            }
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $data = $event->getData();
-            $form = $event->getForm();
-
+            // Ajout du champ 'lieux' si la ville est définie
             if ($data && $data->getVille()) {
                 $ville = $data->getVille();
                 $lieux = $this->entityManager->getRepository(Lieu::class)->findBy(['ville' => $ville]);
+
                 $form->add('lieux', EntityType::class, [
                     'class' => Lieu::class,
                     'choices' => $lieux,
@@ -113,6 +110,7 @@ class SortieType extends AbstractType
                 ]);
             }
         });
+
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
