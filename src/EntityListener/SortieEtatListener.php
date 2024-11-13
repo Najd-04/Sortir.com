@@ -24,11 +24,11 @@ class SortieEtatListener
         $dateDebutSortie = $sortie->getDateHeureDebut();
         $dureeSortie = $sortie->getDuree();
 
-        $tempDateDuebutSortie = $dateDebutSortie;
+        $tempDateDebutSortie = clone $dateDebutSortie;
 
 
 
-        $dateFinSortie =  $tempDateDuebutSortie->modify('+' . $dureeSortie . ' minutes');
+        $dateFinSortie =  $tempDateDebutSortie->modify('+' . $dureeSortie . ' minutes');
 
         $now = new \DateTime();
 
