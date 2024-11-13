@@ -131,6 +131,7 @@
 
                             {% if sortie.etat.libelle == 'Brouillon' and (app.user and (app.user.id == sortie.organisateur.id) ) %}
                                 <a class="btn btn-warning" href="{{ path('sortie_update', {'id': sortie.id}) }}">Modifier</a>
+                                <a class="btn btn-warning" href="{{ path('sortie_delete', {'id': sortie.id}) }}">Supprimer</a>
                             {% else %}
                                 {# Si l'utilisateur n'est organisateur, alors possibilité afficher la sortie
                                 #}
