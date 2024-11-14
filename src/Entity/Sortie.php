@@ -22,28 +22,30 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
-    #[Assert\NotBlank(message: "Veuillez renseigner un nom de sortie")]
+    #[Assert\NotBlank(message: "Le nom de la sortie est obligatoire")]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Assert\GreaterThan('today', message: 'La date d\'inscription ne peut pas être antérieur à la date actuelle')]
-    #[Assert\NotBlank(message: "La date d\'inscription ne peut pas être vide")]
+    #[Assert\GreaterThan('today', message: "La date de la sortie ne peut pas être antérieur à la date actuelle")]
+    #[Assert\NotBlank(message: "La date de la sortie est obligatoire")]
     #[Assert\Type(type: "\DateTimeInterface", message: "La valeur doit être une date valide.")]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: "La durée ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "La durée est obligatoire")]
+    #[Assert\Positive(message: "La durée doit être supérieurs à 0")]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\GreaterThan('today', message: 'La date limite d\'inscription ne peut pas être antérieur à la date actuelle')]
-    #[Assert\LessThan(propertyPath: "dateHeureDebut", message: 'La date limite d\'inscription doit être antérieur à la date de sortie')]
-    #[Assert\NotBlank(message: "La date limite d\'inscription ne peut pas être vide.")]
-    #[Assert\Type(type: "\DateTimeInterface", message: "La valeur doit être une date valide.")]
+    #[Assert\GreaterThan('today', message: "La date limite d'inscription ne peut pas être antérieur à la date actuelle")]
+    #[Assert\LessThan(propertyPath: "dateHeureDebut", message: "La date limite d'inscription doit être antérieur à la date de sortie")]
+    #[Assert\NotBlank(message: "La date limite d'inscription est obligatoire")]
+    #[Assert\Type(type: "\DateTimeInterface", message: "La valeur doit être une date valide")]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column]
-    #[Assert\NotNull(message: 'Veuillez renseigner le nombre de places maximum')]
+    #[Assert\NotNull(message: "Le nombre de places maximum est obligatoire")]
+    #[Assert\Positive(message: "Le nombre de places maximum doit être supérieurs à 0")]
     private ?int $nbInscriptionsMax = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

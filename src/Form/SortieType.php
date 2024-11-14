@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class SortieType extends AbstractType
 {
@@ -136,23 +137,23 @@ class SortieType extends AbstractType
             if (empty($data['lieux'])) {
                 $form->get('lieu')->add('nom', TextType::class, [
                     'constraints' => [
-                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                        new NotBlank(['message' => "Le nom du nouveau lieu est requis si un lieu existant n'est pas sélectionné"]),
                     ],
                 ]);
 
                 $form->get('lieu')->add('rue', TextType::class, [
                     'constraints' => [
-                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                        new NotBlank(['message' => "La rue du nouveau lieu est requis si un lieu existant n'est pas sélectionné"]),
                     ],
                 ]);
                 $form->get('lieu')->add('latitude', NumberType::class, [
                     'constraints' => [
-                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                        new NotBlank(['message' => "La latitude du nouveau lieu est requis si un lieu existant n'est pas sélectionné"]),
                     ],
                 ]);
                 $form->get('lieu')->add('longitude', NumberType::class, [
                     'constraints' => [
-                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                        new NotBlank(['message' => "La longitude du nouveau lieu est requis si un lieu existant n'est pas sélectionné"]),
                     ],
                 ]);
                 $form->get('lieu')->add('ville', EntityType::class, [
@@ -163,7 +164,7 @@ class SortieType extends AbstractType
                     'required' => false,
                     'placeholder' => "--Sélectionnez une ville existante--",
                     'constraints' => [
-                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                        new NotBlank(['message' => "La ville du nouveau lieu est requis si un lieu existant n'est pas sélectionné"]),
                     ],
                 ]);
 
@@ -177,7 +178,7 @@ class SortieType extends AbstractType
             // Vérifie si la sélection est vide et si les champs du sous-formulaire ne sont pas valides
             if (empty($data->lieux) && !$form->get('lieu')->isValid()) {
                 // Ajoute une erreur personnalisée à l'input de type select
-                $form->get('lieux')->addError(new FormError('Veuillez sélectionner une option ou corriger les champs requis.'));
+                $form->get('lieux')->addError(new FormError("Veuillez sélectionner un lieu existant ou corriger les champs requis d'un nouveau lieu"));
             }
         });
     }

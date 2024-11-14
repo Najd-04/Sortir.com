@@ -9,15 +9,7 @@
     <div class="container mt-4">
         {{ form_start(form) }}
         {{ form_row(form.nom) }}
-
-        <div class="form-group">
-            {{ form_label(form.dateHeureDebut) }}
-            {{ form_widget(form.dateHeureDebut, {'attr': {'class': form.dateHeureDebut.vars.valid ? 'form-control' : 'form-control is-invalid'}}) }}
-            <div class="invalid-feedback">
-                {{ form_errors(form.dateHeureDebut) }}
-            </div>
-        </div>
-
+        {{ form_row(form.dateHeureDebut) }}
         {{ form_row(form.dateLimiteInscription) }}
         {{ form_row(form.nbInscriptionsMax) }}
         {{ form_row(form.duree) }}
@@ -51,7 +43,9 @@
             {{ form_errors(form.lieu) }}
         </div>
 
-        <button type="submit" data-turbo="false" name="submit" value="enregistrer" class="btn btn-secondary">Enregistrer</button>
+        <button type="submit" data-turbo="false" name="submit" value="enregistrer" class="btn btn-secondary">
+            Enregistrer
+        </button>
         <button type="submit" data-turbo="false" name="submit" value="publier" class="btn btn-primary">Publier</button>
         {#    {{ form_widget(form.submit) }} #}
         {{ form_end(form) }}
