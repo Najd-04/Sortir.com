@@ -87,13 +87,14 @@ class SortieType extends AbstractType
             $form = $event->getForm();
 
             // Ajout du champ 'lieu' si la condition est remplie
-            if ($data && $data->getLieu() === null) {
+            if ($data) {
                 $form->add('lieu', LieuType::class, [
                     'label' => 'Nouveau Lieu',
                     'label_attr' => [
                         'style' => 'display:none;'  // Masque le label en CSS
                     ],
                     'required' => false,
+                    'mapped' => false,
                 ]);
             }
 

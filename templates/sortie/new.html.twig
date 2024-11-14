@@ -5,7 +5,9 @@
 {% block title %}Sortie{% endblock %}
 
 {% block body %}
-    <h1>Nouvelle Sortie</h1>
+
+    <h1>{{ formTitle }}</h1>
+
     <div class="container mt-4">
         {{ form_start(form) }}
         {{ form_row(form.nom) }}
@@ -14,16 +16,7 @@
         {{ form_row(form.nbInscriptionsMax) }}
         {{ form_row(form.duree) }}
         {{ form_row(form.infosSortie) }}
-
-
-        {#    {{ form_row(form.etat) }} #}
-        {#    {{ form_row(form.site) }} #}
-        {#    {{ form_row(form.organisateur) }} #}
-        <div class="form-group">
-            {{ form_label(form.ville) }}
-            {{ form_widget(form.ville) }}
-        </div>
-
+        {{ form_row(form.ville) }}
 
         {# Liste déroulante pour les lieux existants #}
         <div class="form-row">
@@ -36,18 +29,21 @@
             </div>
         </div>
 
-        {# Formulaire de nouveau lieu, caché par défaut #}
-        <div id="nouveau-lieu-form" style="display: none;">
-            {{ form_label(form.lieu) }}
-            {{ form_widget(form.lieu) }}
-            {{ form_errors(form.lieu) }}
-        </div>
+        {% if form.lieu is defined %}
+            {# Formulaire de nouveau lieu, caché par défaut #}
+            <div id="nouveau-lieu-form" style="display: none;">
+                {{ form_row(form.lieu) }}
+            </div>
+        {% endif %}
 
         <button type="submit" data-turbo="false" name="submit" value="enregistrer" class="btn btn-secondary">
             Enregistrer
         </button>
         <button type="submit" data-turbo="false" name="submit" value="publier" class="btn btn-primary">Publier</button>
-        {#    {{ form_widget(form.submit) }} #}
+        {% if sortie.id is defined %}
+            <a href="{{ path('sortie_delete', {'id': sortie.id, 'token': csrf_token('delete'~sortie.id)}) }}" class="btn btn-danger"
+               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?')">Supprimer</a>
+        {% endif %}
         {{ form_end(form) }}
     </div>
     <script>
