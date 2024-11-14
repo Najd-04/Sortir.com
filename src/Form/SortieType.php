@@ -13,9 +13,11 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SortieType extends AbstractType
 {
@@ -129,6 +131,53 @@ class SortieType extends AbstractType
                     'placeholder' => '--Sélectionnez d\'abord une ville--',
                     'mapped' => false
                 ]);
+            }
+
+            if (empty($data['lieux'])) {
+                $form->get('lieu')->add('nom', TextType::class, [
+                    'constraints' => [
+                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                    ],
+                ]);
+
+                $form->get('lieu')->add('rue', TextType::class, [
+                    'constraints' => [
+                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                    ],
+                ]);
+                $form->get('lieu')->add('latitude', NumberType::class, [
+                    'constraints' => [
+                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                    ],
+                ]);
+                $form->get('lieu')->add('longitude', NumberType::class, [
+                    'constraints' => [
+                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                    ],
+                ]);
+                $form->get('lieu')->add('ville', EntityType::class, [
+                    'class' => Ville::class,
+                    'choice_label' => function ($ville) {
+                        return $ville->getNom() . ' ' . $ville->getCodePostal();
+                    },
+                    'required' => false,
+                    'placeholder' => "--Sélectionnez une ville existante--",
+                    'constraints' => [
+                        new NotBlank(['message' => 'Ce champ est requis lorsque rien n\'est sélectionné.']),
+                    ],
+                ]);
+
+            }
+        });
+
+        // Ajout d'un écouteur d'événements pour valider la logique personnalisée
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+            // Vérifie si la sélection est vide et si les champs du sous-formulaire ne sont pas valides
+            if (empty($data->lieux) && !$form->get('lieu')->isValid()) {
+                // Ajoute une erreur personnalisée à l'input de type select
+                $form->get('lieux')->addError(new FormError('Veuillez sélectionner une option ou corriger les champs requis.'));
             }
         });
     }
