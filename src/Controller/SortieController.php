@@ -19,8 +19,10 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name: 'sortie')]
+#[IsGranted('ROLE_USER', message: "Vous devez être connecté(e) pour accéder à l'application")]
 class SortieController extends AbstractController
 {
 
@@ -173,7 +175,7 @@ class SortieController extends AbstractController
             ]);
         } else {
             $this->addFlash('error', "Vous ne pouvez modifier cette sortie car elle n'est pas en état brouillon");
-           return $this->redirectToRoute('sortie_list');
+            return $this->redirectToRoute('sortie_list');
         }
     }
 

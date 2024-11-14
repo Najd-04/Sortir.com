@@ -1,89 +1,91 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>{% block title %}Welcome!{% endblock %}</title>
-  <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 
-  <!-- Bootstrap CSS CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  {% block javascript %}
-  {% block importmap %}{{ importmap('app') }}{% endblock %}
-{% endblock %}
+    {% block javascript %}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+  {% endblock %}
 </head>
 <body>
 <div class="container-fluid">
-  {# Affichage des messages flash #}
-  {% for message in app.flashes('success') %}
-    <div class="alert alert-success">
-      {{ message }}
-    </div>
-  {% endfor %}
-  {% for message in app.flashes('error') %}
-    <div class="alert alert-danger">
-      {{ message }}
-    </div>
-  {% endfor %}
+    {# Affichage des messages flash #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
 
-  <!-- Barre de Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-    <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
-        <img src="{{ asset('images/sortir.png') }}" alt="Sortir Logo" style="width: 50px; height: auto;">
-        <span class="ms-2 h4 mb-0">Sortir.com</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
-          </li>
+    <!-- Barre de Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
+                <img src="{{ asset('images/sortir.png') }}" alt="Sortir Logo" style="width: 50px; height: auto;">
+                <span class="ms-2 h4 mb-0">Sortir.com</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
+                    </li>
 
-          {% if app.user %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_profile', {'id': app.user.id}) }}">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('sortie_list') }}">Sorties</a>
-            </li>
-          {% if is_granted('ROLE_ADMIN') %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('admin_ville') }}">villes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('sortie_list') }}">Sites</a>
-            </li><li class="nav-item">
-            <a class="nav-link" href="{{ path('admin_register_users') }}">Inscrire des utilisateurs</a>
-          </li>
-            {% endif %}
-          {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
-            </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <!-- Fin de la Barre de Navigation -->
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_profile', {'id': app.user.id}) }}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('sortie_list') }}">Sorties</a>
+                        </li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('admin_ville') }}">villes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('sortie_list') }}">Sites</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('admin_register_users') }}">Inscrire des
+                                    utilisateurs</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Fin de la Barre de Navigation -->
 
 
-  {% block body %}{% endblock %}
+    {% block body %}{% endblock %}
 
 </div>
 <footer class="bg-secondary text-center text-light py-3 mt-5">
-  © Sortir.Com By Najd,Chloe,Mehdi 2024
+    © Sortir.Com By Najd,Chloe,Mehdi 2024
 </footer>
 
 <!-- Bootstrap JS Bundle with Popper -->
