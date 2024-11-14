@@ -44,7 +44,6 @@ class SortieController extends AbstractController
     $etat = null;
     if ($sortiePassee) {
       $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Clôturée']);
-      dd($etat);
     }
 
     $organisateur = null;
