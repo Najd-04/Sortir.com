@@ -49,7 +49,7 @@ class ProfileController extends AbstractController
 
       $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');
 
-      return $this->redirectToRoute('app_profile');
+      return $this->redirectToRoute('app_profile',['id'=>$user->getId()]);
     }
 
     return $this->render('registration/register.html.twig', [
