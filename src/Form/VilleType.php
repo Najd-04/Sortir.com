@@ -34,15 +34,6 @@ class VilleType extends AbstractType
         ;
     }
 
-            /*
-
-            ->add('nom')
-            ->add('codePostal')
-            ->add ('submit', SubmitType::class, [
-                'label' => 'Ajouter'])
-            */
-
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

@@ -17,19 +17,15 @@ class Lieu
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
-    #[Assert\NotBlank(message: 'Veuillez renseigné un nom de lieu')]
     private ?string $nom = null;
 
     #[ORM\Column(length: 30, nullable: true)]
-    #[Assert\NotBlank(message: 'Veuillez renseigné un nom de lieu')]
     private ?string $rue = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\NotBlank(message: 'Veuillez renseigné un nom de lieu')]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\NotBlank(message: 'Veuillez renseigné un nom de lieu')]
     private ?float $longitude = null;
 
     /**
@@ -40,8 +36,6 @@ class Lieu
 
     #[ORM\ManyToOne(inversedBy: 'lieux')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank(message: 'Veuillez renseigné un nom de lieu')]
-    #[Assert\NotNull(message: 'Veuillez renseigné un nom de lieu')]
     private ?Ville $ville = null;
 
     public function __construct()

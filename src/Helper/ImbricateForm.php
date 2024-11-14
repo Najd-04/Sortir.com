@@ -20,25 +20,16 @@ class ImbricateForm
 
     public function addLieuToSortieForm(FormInterface $form, Sortie $sortie, Request $request): void
     {
-//        dd($form);
-//        if ($form->has('lieu')) {
             $nouveauLieu = $form->get('lieu')->getData();
-//        dd($nouveauLieu);
             $lieuExistant = $form->get('lieux')->getData();
-            // Vérifie si un nouveau lieu a été ajouté
             if ($nouveauLieu && $nouveauLieu->getNom() && $nouveauLieu->getRue() && $nouveauLieu->getLatitude() && $nouveauLieu->getLongitude() && $nouveauLieu->getVille()) {
-                // Enregistrer le nouveau lieu dans la base de données
                 $formLieu = $this->formFactory->create(LieuType::class, $nouveauLieu);
-//            createForm(LieuType::class, $nouveauLieu);
                 $formLieu->handleRequest($request);
                 $this->entityManager->persist($nouveauLieu);
                 $this->entityManager->flush();
-                // Assigner ce lieu à la sortie
                 $sortie->setLieu($nouveauLieu);
             } else {
-                // Si aucun nouveau lieu n'est ajouté, utiliser le lieu existant sélectionné
                 $sortie->setLieu($lieuExistant);
             }
         }
-//    }
 }

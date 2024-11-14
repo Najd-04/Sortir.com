@@ -21,12 +21,6 @@ class ProfileController extends AbstractController
   #[IsGranted('IS_AUTHENTICATED')]
   public function profile(Participant $participant): Response
   {
-//    $user = $this->getUser();
-//
-//    if (!$user) {
-//      return $this->redirectToRoute('app_login');
-//    }
-
     return $this->render('profile/profile.html.twig', [
       'participant' => $participant,
     ]);
