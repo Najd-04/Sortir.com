@@ -1,3 +1,4 @@
+"pseudo,prenom,nom,email,telephone,site,password"
 "jdupont,Jean,Dupont,j.dupont@example.com,0612345678,Paris,password123"
 "mbrown,Marie,Brown,m.brown@example.com,0698765432,Lyon,password123"
 "pwhite,Paul,White,p.white@example.com,0654321876,Marseille,password123"
