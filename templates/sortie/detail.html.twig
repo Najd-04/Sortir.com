@@ -28,6 +28,7 @@
         <ul class="list-group">
           <li class="list-group-item"><strong>Nom :</strong> {{ sortie.lieu.nom }}</li>
           <li class="list-group-item"><strong>Rue :</strong> {{ sortie.lieu.rue }}</li>
+          <li class="list-group-item"><strong>Ville :</strong> {{ sortie.lieu.ville.nom }} {{ sortie.lieu.ville.codePostal }}</li>
           <li class="list-group-item"><strong>Latitude :</strong> {{ sortie.lieu.latitude }}</li>
           <li class="list-group-item"><strong>Longitude :</strong> {{ sortie.lieu.longitude }}</li>
         </ul>
@@ -80,7 +81,7 @@
       <div class="col">
         <h3>Organisateur</h3>
         <p><strong>Nom de l'organisateur :</strong> {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</p>
-        <p><strong>Ville :</strong> {{ sortie.lieu.ville.nom }}</p>
+        <p><strong>Campus de l'organisateur :</strong> {{ sortie.organisateur.site.nom }}</p>
       </div>
     </div>
 

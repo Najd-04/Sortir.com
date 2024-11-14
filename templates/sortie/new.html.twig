@@ -44,14 +44,12 @@
             </div>
         </div>
 
-        {#    {% if form.lieu is defined %} #}
         {# Formulaire de nouveau lieu, caché par défaut #}
         <div id="nouveau-lieu-form" style="display: none;">
             {{ form_label(form.lieu) }}
             {{ form_widget(form.lieu) }}
             {{ form_errors(form.lieu) }}
         </div>
-        {#    {% endif %} #}
 
         <button type="submit" data-turbo="false" name="submit" value="enregistrer" class="btn btn-secondary">Enregistrer</button>
         <button type="submit" data-turbo="false" name="submit" value="publier" class="btn btn-primary">Publier</button>
