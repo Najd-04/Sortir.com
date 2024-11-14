@@ -4,10 +4,6 @@
 
 {% block body %}
 
-    {#    {{ component('Alert', {message: 'Hello Twig Components!'}) }}
-    #}
-
-
     <h1 class="h1"> Gérer les villes</h1>
 
     <h2 class="h2">Filtrer les villes</h2>
@@ -47,17 +43,6 @@
                             Supprimer </a>
                         <a class="btn btn-warning" href="{{ path('admin_ville-update', {'id' : ville.id}) }}">
                             Modifier </a>
-
-
-                        {#
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalEditObject"
-                                data-ville-json="{{ ville|json_encode }}">
-                            Modifier
-                        </button>
-                        #}
-                        {#
-                        <a {#  href="{{ path('edit_item', {'id': item.id}) }}" class="btn btn-warning">Modifier</a>
-                        #}
                     </td>
                 </tr>
             {% endfor %}
@@ -73,18 +58,9 @@
                 <th>#</th>
                 <th>
                     {{ form_label(inputForm.codePostal) }}
-                    {#
-                    <label for="code-postal">
-                    Code Postal
-                    </label>
-                    #}
                 </th>
                 <th>
                     {{ form_label(inputForm.nom) }}
-                    {#   <label for="ville">
-                        Code Postal
-                    </label>
-                    #}
                 </th>
                 <th>Actions</th>
             </tr>
@@ -95,25 +71,15 @@
                 <td>
                     {{ form_widget(inputForm.codePostal) }}
                     {{ form_errors(inputForm.codePostal) }}
-                    {#
-                    <input id="code-postal" type="text" name="code-postal" class="form-control" placeholder="Code Postal" required>
-                    #}
                 </td>
                 <td>
                     {{ form_widget(inputForm.nom) }}
                     {{ form_errors(inputForm.nom) }}
-                    {#
-                    <input id="ville" type="text" name="ville" class="form-control" placeholder="Ville" required>
-                    #}
                 </td>
                 <td>
                     {{ form_widget(inputForm.submit) }}
-                    {#
-                    <input {#  href="{{ path('edit_item', {'id': item.id}) }}"  type="submit" value="Ajouter" class="btn btn-info"></input>
-                    #}
                 </td>
             </tr>
-
             </tbody>
         </table>
         {{ form_end(inputForm) }}

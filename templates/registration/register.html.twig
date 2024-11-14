@@ -51,7 +51,6 @@
             {{ form_errors(registrationForm.email) }}
         </div>
 
-        {# Affiche les champs de mot de passe seulement pour l'inscription #}
         {% if not app.user %}
             <div class="mb-3">
                 {{ form_label(registrationForm.plainPassword.first) }}
@@ -78,7 +77,6 @@
             {{ form_errors(registrationForm.photoProfil) }}
             <small class="form-text text-muted">Formats acceptés : JPG, PNG. Taille max : 2MB.</small>
         </div>
-        {# Affiche les champs de mot de passe seulement pour la modification #}
         {% if app.user %}
             <div class="mb-3">
                 {{ form_label(registrationForm.plainPassword.first) }}
