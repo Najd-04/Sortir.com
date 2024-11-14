@@ -43,6 +43,7 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
           </li>
+
           {% if app.user %}
             <li class="nav-item">
               <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
@@ -59,7 +60,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ path('sortie_list') }}">Sites</a>
-            </li>
+            </li><li class="nav-item">
+            <a class="nav-link" href="{{ path('admin_register_users') }}">Inscrire des utilisateurs</a>
+          </li>
             {% endif %}
           {% else %}
             <li class="nav-item">

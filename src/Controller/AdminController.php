@@ -3,16 +3,21 @@
 namespace App\Controller;
 
 
+use App\Entity\Participant;
 use App\Entity\Ville;
 use App\Form\VilleType;
 use App\Helper\SentenceCaseService;
 use App\Repository\VilleRepository;
+use App\Service\UserImportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[Route('/admin', name: 'admin')]
 class AdminController extends AbstractController
@@ -86,8 +91,88 @@ class AdminController extends AbstractController
       'form' => $form,
       ]);
     }
+  #[Route('/register_users', name: '_register_users')]
+  #[IsGranted('ROLE_ADMIN')] // Limite l'accès à ceux qui ont le rôle admin
+  public function registerUsers(Request $request, UserImportService $userImportService): Response
+  {
+    // Formulaire de téléchargement de fichier
+    $form = $this->createFormBuilder()
+      ->add('file', FileType::class, [
+        'label' => 'Importer un fichier CSV pour inscrire les utilisateurs',
+        'constraints' => [
+          new NotBlank(['message' => 'Veuillez sélectionner un fichier.']),
+          new File([
+            'mimeTypes' => ['text/csv', 'text/plain'],
+            'mimeTypesMessage' => 'Veuillez télécharger un fichier CSV.',
+          ]),
+        ],
+      ])
+      ->getForm();
 
+    $form->handleRequest($request);
 
+    if ($form->isSubmitted() && $form->isValid()) {
+      $file = $form->get('file')->getData();
+
+      // Traitez le fichier pour inscrire les utilisateurs
+      $result = $userImportService->importUsersFromFile($file);
+
+      $this->addFlash('success', 'Utilisateurs inscrits avec succès !');
+      return $this->redirectToRoute('admin_register_users');
+    }
+
+    return $this->render('admin/register_users.html.twig', [
+      'form' => $form->createView(),
+    ]);
+  }
+// Affichage de la liste des utilisateurs
+  #[Route('/list_users', name: '_list_users')]
+  public function listUsers(EntityManagerInterface $entityManager): Response
+  {
+    // Récupérer tous les utilisateurs
+    $users = $entityManager->getRepository(Participant::class)->findAll();
+
+    return $this->render('admin/list_users.html.twig', [
+      'users' => $users
+    ]);
+  }
+
+  // Suppression d'un utilisateur
+  #[Route('/delete_user/{id}', name: '_delete_user')]
+  public function deleteUser(int $id, EntityManagerInterface $entityManager): Response
+  {
+    $user = $entityManager->getRepository(Participant::class)->find($id);
+
+    if ($user) {
+      $entityManager->remove($user);
+      $entityManager->flush();
+
+      $this->addFlash('success', 'Utilisateur supprimé avec succès.');
+    } else {
+      $this->addFlash('error', 'L\'utilisateur n\'existe pas.');
+    }
+
+    return $this->redirectToRoute('admin_list_users');
+  }
+
+  // Modifier un utilisateur
+  #[Route('/edit_user/{id}', name: '_edit_user')]
+  public function editUser(int $id, Request $request, EntityManagerInterface $entityManager): Response
+  {
+    $user = $entityManager->getRepository(Participant::class)->find($id);
+
+    if (!$user) {
+      $this->addFlash('error', 'Utilisateur introuvable.');
+      return $this->redirectToRoute('admin_list_users');
+    }
+
+    // Tu peux ajouter ici le code pour modifier l'utilisateur avec un formulaire, comme dans la méthode d'inscription
+    // ...
+
+    return $this->render('admin/edit_user.html.twig', [
+      'user' => $user
+    ]);
+  }
 
 }
 
