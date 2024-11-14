@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/SQL/etat.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/SQL/participant.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/SQL/site.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/SQL/villes.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/SQL/1.etat.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/SQL/2.site.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/SQL/3.villes.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/SQL/4.lieu.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/SQL/5.participant.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/SQL/6.sortie.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/SQL/7.inscription.sql" dialect="MySQL" />
     <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>
