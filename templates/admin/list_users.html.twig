@@ -1,46 +1,45 @@
-{# templates/admin/list_users.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
-        <h1>Liste des utilisateurs</h1>
+        <h1 class="mb-4">Liste des utilisateurs</h1>
 
-        <table class="table table-striped mt-4">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Pseudo</th>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Téléphone</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
                 <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.pseudo }}</td>
-                    <td>{{ user.prenom }}</td>
-                    <td>{{ user.nom }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.telephone }}</td>
-                    <td>
-                        <a href="{{ path('admin_edit_user', {'id': user.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                        <a href="{{ path('admin_delete_user', {'id': user.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">Supprimer</a>
-                    </td>
+                    <th>#</th>
+                    <th>Pseudo</th>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Actions</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7" class="text-center">Aucun utilisateur trouvé.</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.pseudo }}</td>
+                        <td>{{ user.prenom }}</td>
+                        <td>{{ user.nom }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.telephone }}</td>
+                        <td>
+                            <a href="{{ path('admin_delete_user', {'id': user.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">Supprimer</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">Aucun utilisateur trouvé.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
     </div>
 {% endblock %}
