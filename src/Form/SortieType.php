@@ -86,8 +86,6 @@ class SortieType extends AbstractType
             $data = $event->getData();
             $form = $event->getForm();
 
-            // Ajout du champ 'lieu' si la condition est remplie
-            if ($data) {
                 $form->add('lieu', LieuType::class, [
                     'label' => 'Nouveau Lieu',
                     'label_attr' => [
@@ -96,7 +94,6 @@ class SortieType extends AbstractType
                     'required' => false,
                     'mapped' => false,
                 ]);
-            }
 
             // Ajout du champ 'lieux' si la ville est définie
             if ($data && $data->getVille()) {

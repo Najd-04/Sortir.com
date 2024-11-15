@@ -29,19 +29,18 @@
             </div>
         </div>
 
-        {% if form.lieu is defined %}
-            {# Formulaire de nouveau lieu, caché par défaut #}
-            <div id="nouveau-lieu-form" style="display: none;">
-                {{ form_row(form.lieu) }}
-            </div>
-        {% endif %}
+        {# Formulaire de nouveau lieu, caché par défaut #}
+        <div id="nouveau-lieu-form" style="display: none;">
+            {{ form_row(form.lieu) }}
+        </div>
 
         <button type="submit" data-turbo="false" name="submit" value="enregistrer" class="btn btn-secondary">
             Enregistrer
         </button>
         <button type="submit" data-turbo="false" name="submit" value="publier" class="btn btn-primary">Publier</button>
         {% if sortie.id is defined %}
-            <a href="{{ path('sortie_delete', {'id': sortie.id, 'token': csrf_token('delete'~sortie.id)}) }}" class="btn btn-danger"
+            <a href="{{ path('sortie_delete', {'id': sortie.id, 'token': csrf_token('delete'~sortie.id)}) }}"
+               class="btn btn-danger"
                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?')">Supprimer</a>
         {% endif %}
         {{ form_end(form) }}
