@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Entity\Participant;
 use App\Entity\Site;
 use Doctrine\ORM\EntityManagerInterface;
+use League\Csv\Reader;
+use League\Csv\Exception as CsvException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserImportService
@@ -18,53 +20,70 @@ class UserImportService
     $this->passwordHasher = $passwordHasher;
   }
 
-  public function importUsersFromFile($file): array
+  public function importUsersFromFile(string $file): array
   {
-    $handle = fopen($file->getPathname(), 'r');
+    try {
+      // Lecture du fichier CSV
+      $csv = Reader::createFromPath($file, 'r');
+      $csv->setHeaderOffset(0); // La première ligne contient les en-têtes
 
-    // Lire chaque ligne du fichier CSV
-    while (($data = fgetcsv($handle, 1000, ',')) !== false) {
-      // Vérification de la longueur pour s'assurer d'avoir 7 éléments
-      if (count($data) !== 7) {
-        error_log("Ligne incomplète ou mal formatée dans le fichier CSV: " . implode(", ", $data));
-        continue; // Ignorer cette ligne
+      $records = $csv->getRecords(); // Obtenir les enregistrements
+      $counter = 0; // Nombre d'utilisateurs ajoutés
+
+      foreach ($records as $record) {
+        // Vérification de la présence du site
+        $site = $this->entityManager->getRepository(Site::class)->findOneBy(['nom' => $record['site']]);
+        if (!$site) {
+          // Si le site n'est pas trouvé, on passe au suivant
+          continue;
+        }
+
+        // Vérifie si un participant existe déjà avec l'email
+        $existingParticipant = $this->entityManager->getRepository(Participant::class)->findOneBy(['email' => $record['email']]);
+        if ($existingParticipant) {
+          continue; // Ignore ce participant s'il existe déjà
+        }
+
+        // Création du participant
+        $participant = new Participant();
+        $participant->setPseudo($record['pseudo']);
+        $participant->setPrenom($record['prenom']);
+        $participant->setNom($record['nom']);
+        $participant->setEmail($record['email']);
+        $participant->setTelephone($record['telephone'] ?? null);
+        $participant->setSite($site);
+        $participant->setPassword(
+          $this->passwordHasher->hashPassword($participant, $record['password'])
+        );
+        $participant->setActif(true);
+        $participant->setRoles(['ROLE_USER']);
+
+        // Persister l'entité
+        $this->entityManager->persist($participant);
+        $counter++;
       }
 
-      // Recherche du site par nom
-      $site = $this->entityManager->getRepository(Site::class)->findOneBy(['nom' => $data[5]]);
-      if (!$site) {
-        error_log("Site non trouvé pour le nom: " . $data[5]);
-        continue; // Ignorer cette ligne si le site n'est pas trouvé
-      }
+      // Effectue un seul flush pour toutes les entités
+      $this->entityManager->flush();
 
-      // Vérifie si un participant avec cet email existe déjà
-      $existingParticipant = $this->entityManager->getRepository(Participant::class)->findOneBy(['email' => $data[3]]);
-      if ($existingParticipant) {
-        error_log("Participant avec email déjà existant: " . $data[3]);
-        continue; // Ignorer cette ligne si l'email est déjà utilisé
-      }
+      // Retourne un message de succès
+      return [
+        'status' => 'success',
+        'message' => "$counter utilisateurs ont été inscrits avec succès."
+      ];
 
-      // Crée un nouveau participant
-      $participant = new Participant();
-      $participant->setPseudo($data[0]);
-      $participant->setPrenom($data[1]);
-      $participant->setNom($data[2]);
-      $participant->setEmail($data[3]);
-      $participant->setTelephone($data[4]);
-      $participant->setSite($site);
-      $participant->setPassword(
-        $this->passwordHasher->hashPassword($participant, $data[6])
-      );
-      $participant->setActif(true);
-      $participant->setRoles(['ROLE_USER']);
-
-      $this->entityManager->persist($participant);
+    } catch (CsvException $e) {
+      // Gestion des erreurs de lecture du fichier CSV
+      return [
+        'status' => 'error',
+        'message' => 'Erreur lors de la lecture du fichier CSV : ' . $e->getMessage()
+      ];
+    } catch (\Exception $e) {
+      // Gestion des autres erreurs
+      return [
+        'status' => 'error',
+        'message' => 'Erreur inattendue : ' . $e->getMessage()
+      ];
     }
-    fclose($handle);
-
-    $this->entityManager->flush();
-    return ['status' => 'success', 'message' => 'Tous les utilisateurs ont été inscrits.'];
   }
-
-
 }

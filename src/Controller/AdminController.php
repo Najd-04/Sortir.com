@@ -12,10 +12,12 @@ use App\Service\UserImportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -69,7 +71,6 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_ville');
     }
 
-
     #[Route('/villes/update/{id}', name: '_ville-update', requirements: ['id' => '\d+'])]
     public function update(Ville $ville, EntityManagerInterface $em, Request $request, SentenceCaseService $sentenceCaseService): Response {
 
@@ -92,10 +93,10 @@ class AdminController extends AbstractController
       ]);
     }
   #[Route('/register_users', name: '_register_users')]
-  #[IsGranted('ROLE_ADMIN')] // Limite l'accès à ceux qui ont le rôle admin
+  #[IsGranted('ROLE_ADMIN')]
   public function registerUsers(Request $request, UserImportService $userImportService): Response
   {
-    // Formulaire de téléchargement de fichier
+    // Créez le formulaire pour l'importation de fichiers CSV
     $form = $this->createFormBuilder()
       ->add('file', FileType::class, [
         'label' => 'Importer un fichier CSV pour inscrire les utilisateurs',
@@ -112,12 +113,22 @@ class AdminController extends AbstractController
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
+      /** @var UploadedFile $file */
       $file = $form->get('file')->getData();
 
-      // Traitez le fichier pour inscrire les utilisateurs
-      $result = $userImportService->importUsersFromFile($file);
+      if ($file) {
+        // Traite le fichier pour inscrire les utilisateurs
+        $result = $userImportService->importUsersFromFile($file->getPathname());
 
-      $this->addFlash('success', 'Utilisateurs inscrits avec succès !');
+        if ($result['status'] === 'success') {
+          $this->addFlash('success', 'Utilisateurs inscrits avec succès !');
+        } else {
+          $this->addFlash('error', $result['message']);
+        }
+      } else {
+        $this->addFlash('error', 'Le fichier n\'a pas été correctement reçu.');
+      }
+
       return $this->redirectToRoute('admin_register_users');
     }
 
@@ -125,11 +136,9 @@ class AdminController extends AbstractController
       'form' => $form->createView(),
     ]);
   }
-// Affichage de la liste des utilisateurs
   #[Route('/list_users', name: '_list_users')]
   public function listUsers(EntityManagerInterface $entityManager): Response
   {
-    // Récupérer tous les utilisateurs
     $users = $entityManager->getRepository(Participant::class)->findAll();
 
     return $this->render('admin/list_users.html.twig', [
@@ -137,7 +146,7 @@ class AdminController extends AbstractController
     ]);
   }
 
-  // Suppression d'un utilisateur
+
   #[Route('/delete_user/{id}', name: '_delete_user')]
   public function deleteUser(int $id, EntityManagerInterface $entityManager): Response
   {
