@@ -11,3 +11,4 @@
  	5) Injecter les fichier .sql du dossier SQL dans l'ordre indiqué
   	6) Créer une fichier .env.local à la racine du projet
    	7) Y ajouter : 'GOOGLE_MAPS_API_KEY=AIzaSyD3J_53kKhTVQ6rkCJuyMV5Zvxa2dFYfjI' pour l'API GoogleMap
+    8) Déplacer les photos du dossier SQL dans le dossier assets/uploads/photos pour voir les photos de profil 
